@@ -1,0 +1,83 @@
+/**
+ * run_all.js  -  Entry point: run Phase 1 + Phase 2, write all outputs
+ *
+ * Usage:  node scripts/run_all.js
+ *
+ * REAL DATA:
+ *   Save UHSLC tide gauge data to:  data/male_sealevel.csv  (or .dat)
+ *   Save OneMap island data to:     data/islands.json
+ *   -> The script will use real data automatically if those files exist.
+ */
+
+'use strict';
+
+const fs   = require('fs');
+const path = require('path');
+
+const {
+  DATA_DIR, OUT_DIR, ensureDirs,
+  loadSeaLevel, generateDemoSeaLevel, generateDemoIslands,
+  saveJSON,
+} = require('./utils');
+
+const { runPhase1 } = require('./phase1_gis');
+const { runPhase2 } = require('./phase2_ml');
+const { generateClimateIndices, loadClimateIndex } = require('./climate_indices');
+
+async function main () {
+  console.log('='.repeat(60));
+  console.log('  Maldives Sea Level Rise Analysis');
+  console.log('  Mohamed Zidane Mahmood  |  S1701391  |  April 2026');
+  console.log('='.repeat(60));
+
+  ensureDirs();
+
+  // Load or generate sea level data
+  const slPaths = [
+    path.join(DATA_DIR, 'male_sealevel.csv'),
+    path.join(DATA_DIR, 'male_sealevel.dat'),
+    path.join(DATA_DIR, 'rq108a.dat'),
+    path.join(DATA_DIR, 'fd108a.dat'),
+  ];
+  const slPath = slPaths.find(p => fs.existsSync(p)) || generateDemoSeaLevel();
+  console.log(`\n  Sea level data: ${path.basename(slPath)}`);
+  const seaLevel = loadSeaLevel(slPath);
+  console.log(`  Records: ${seaLevel.length}  (${seaLevel[0].date.getFullYear()}-${seaLevel[seaLevel.length-1].date.getFullYear()})`);
+
+  // Load or generate island data
+  const islandPath = path.join(DATA_DIR, 'islands.json');
+  if (!fs.existsSync(islandPath)) generateDemoIslands();
+  const islands = JSON.parse(fs.readFileSync(islandPath));
+  console.log(`  Islands: ${islands.length}`);
+
+  // Load or generate climate indices
+  const { oniPath, dmiPath } = generateClimateIndices();
+  const oniMap = loadClimateIndex(oniPath, 'oni');
+  const dmiMap = loadClimateIndex(dmiPath, 'dmi');
+  console.log(`  Climate indices: ${Object.keys(oniMap).length} months ONI, ${Object.keys(dmiMap).length} months DMI`);
+
+  // Phase 1
+  const { summary: phase1Summary } = runPhase1(islands);
+
+  // Phase 2
+  const { metrics } = await runPhase2(seaLevel, { oniMap, dmiMap });
+
+  // Combined summary
+  const summary = { phase1: phase1Summary, ml_metrics: metrics };
+  saveJSON('summary.json', summary);
+
+  // Print key results
+  console.log('\n-- Results Summary --------------------------------------');
+  for (const [scen, s] of Object.entries(phase1Summary)) {
+    console.log(`  ${scen.padEnd(18)} | ${s.pct_land_inundated}% land | ${s.pop_at_risk.toLocaleString()} people at risk`);
+  }
+  console.log('\n  Best ML model:', metrics.sort((a,b) => a.RMSE_cm - b.RMSE_cm)[0].Model,
+    `(RMSE=${metrics[0].RMSE_cm}cm, R^2=${metrics[0].R2})`);
+
+  console.log('\n-- Done -------------------------------------------------');
+  console.log('  Outputs in ./outputs/');
+  console.log('  Start dashboard: node server.js  (then open http://localhost:3000)');
+  console.log('='.repeat(60));
+}
+
+main().catch(err => { console.error(err); process.exit(1); });

@@ -1,0 +1,25 @@
+{
+  "name": "maldives-slr",
+  "version": "1.0.0",
+  "description": "Predicting Sea Level Rise Impact on Maldivian Islands – S1701391",
+  "main": "server.js",
+  "scripts": {
+    "analyse": "node scripts/run_all.js",
+    "analyse:tf": "node scripts/run_all_tf.js",
+    "start": "node server.js",
+    "dev": "node scripts/run_all.js && node server.js",
+    "analyse:advanced": "python scripts/ml_advanced.py",
+    "analyse:all": "node scripts/run_all.js && python scripts/ml_advanced.py"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "arima": "^0.2.4",
+    "chart.js": "^4.4.0",
+    "express": "^4.18.2",
+    "papaparse": "^5.4.1",
+    "simple-statistics": "^7.8.3"
+  },
+  "devDependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

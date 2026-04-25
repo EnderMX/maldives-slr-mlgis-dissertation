@@ -1,0 +1,32 @@
+[
+  {
+    "Model": "ARIMA",
+    "RMSE_cm": 11.9045,
+    "MAE_cm": 10.156,
+    "R2": -2.4438
+  },
+  {
+    "Model": "Prophet",
+    "RMSE_cm": 10.1795,
+    "MAE_cm": 8.3697,
+    "R2": -1.5181
+  },
+  {
+    "Model": "LSTM",
+    "RMSE_cm": 4.5824,
+    "MAE_cm": 3.6859,
+    "R2": 0.4897
+  },
+  {
+    "Model": "Hybrid LSTM",
+    "RMSE_cm": 4.3781,
+    "MAE_cm": 3.394,
+    "R2": 0.5342
+  },
+  {
+    "Model": "Ensemble (LSTM+Hybrid)",
+    "RMSE_cm": 4.3734,
+    "MAE_cm": 3.4482,
+    "R2": 0.5352
+  }
+]

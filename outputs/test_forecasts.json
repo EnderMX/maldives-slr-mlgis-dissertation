@@ -1,0 +1,767 @@
+[
+  {
+    "date": "2018-11-01",
+    "observed": 10.44,
+    "arima": 9.5787,
+    "prophet": 7.2139,
+    "lstm": 11.2289,
+    "hybrid": 11.4158,
+    "ensemble": 11.3036
+  },
+  {
+    "date": "2018-12-01",
+    "observed": 8.86,
+    "arima": 9.5987,
+    "prophet": 8.9829,
+    "lstm": 11.4042,
+    "hybrid": 11.5069,
+    "ensemble": 11.4453
+  },
+  {
+    "date": "2019-01-01",
+    "observed": 12.43,
+    "arima": 9.5938,
+    "prophet": 10.3483,
+    "lstm": 10.3714,
+    "hybrid": 10.7621,
+    "ensemble": 10.5277
+  },
+  {
+    "date": "2019-02-01",
+    "observed": 11.48,
+    "arima": 9.595,
+    "prophet": 11.3236,
+    "lstm": 12.4511,
+    "hybrid": 13.5979,
+    "ensemble": 12.9098
+  },
+  {
+    "date": "2019-03-01",
+    "observed": 13.94,
+    "arima": 9.5947,
+    "prophet": 13.6364,
+    "lstm": 11.7148,
+    "hybrid": 13.3162,
+    "ensemble": 12.3554
+  },
+  {
+    "date": "2019-04-01",
+    "observed": 17.76,
+    "arima": 9.5948,
+    "prophet": 15.6281,
+    "lstm": 13.5009,
+    "hybrid": 14.5768,
+    "ensemble": 13.9313
+  },
+  {
+    "date": "2019-05-01",
+    "observed": 14.15,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 15.631,
+    "hybrid": 16.8862,
+    "ensemble": 16.1331
+  },
+  {
+    "date": "2019-06-01",
+    "observed": 19.39,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 13.6361,
+    "hybrid": 15.3472,
+    "ensemble": 14.3206
+  },
+  {
+    "date": "2019-07-01",
+    "observed": 23.09,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 17.3838,
+    "hybrid": 18.626,
+    "ensemble": 17.8807
+  },
+  {
+    "date": "2019-08-01",
+    "observed": 21.7,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 19.0934,
+    "hybrid": 20.3714,
+    "ensemble": 19.6046
+  },
+  {
+    "date": "2019-09-01",
+    "observed": 20.54,
+    "arima": 9.5948,
+    "prophet": 9.1474,
+    "lstm": 18.6784,
+    "hybrid": 19.2569,
+    "ensemble": 18.9098
+  },
+  {
+    "date": "2019-10-01",
+    "observed": 22.07,
+    "arima": 9.5948,
+    "prophet": 8.0397,
+    "lstm": 18.4407,
+    "hybrid": 19.5896,
+    "ensemble": 18.9003
+  },
+  {
+    "date": "2019-11-01",
+    "observed": 15.72,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 19.5348,
+    "hybrid": 20.2248,
+    "ensemble": 19.8108
+  },
+  {
+    "date": "2019-12-01",
+    "observed": 18.56,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 15.2713,
+    "hybrid": 15.7779,
+    "ensemble": 15.474
+  },
+  {
+    "date": "2020-01-01",
+    "observed": 13.83,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 18.0241,
+    "hybrid": 16.9009,
+    "ensemble": 17.5749
+  },
+  {
+    "date": "2020-02-01",
+    "observed": 17.06,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 13.832,
+    "hybrid": 14.1163,
+    "ensemble": 13.9457
+  },
+  {
+    "date": "2020-03-01",
+    "observed": 22.43,
+    "arima": 9.5948,
+    "prophet": 13.6364,
+    "lstm": 16.845,
+    "hybrid": 16.6408,
+    "ensemble": 16.7633
+  },
+  {
+    "date": "2020-04-01",
+    "observed": 23.97,
+    "arima": 9.5948,
+    "prophet": 15.6281,
+    "lstm": 19.1567,
+    "hybrid": 19.9795,
+    "ensemble": 19.4858
+  },
+  {
+    "date": "2020-05-01",
+    "observed": 20.07,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 20.3527,
+    "hybrid": 21.2107,
+    "ensemble": 20.6959
+  },
+  {
+    "date": "2020-06-01",
+    "observed": 20.59,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 18.1576,
+    "hybrid": 20.0103,
+    "ensemble": 18.8987
+  },
+  {
+    "date": "2020-07-01",
+    "observed": 27.05,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 19.326,
+    "hybrid": 21.0056,
+    "ensemble": 19.9978
+  },
+  {
+    "date": "2020-08-01",
+    "observed": 24.34,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 23.1012,
+    "hybrid": 24.215,
+    "ensemble": 23.5467
+  },
+  {
+    "date": "2020-09-01",
+    "observed": 13.79,
+    "arima": 9.5948,
+    "prophet": 9.1474,
+    "lstm": 20.7426,
+    "hybrid": 21.7414,
+    "ensemble": 21.1421
+  },
+  {
+    "date": "2020-10-01",
+    "observed": 15.26,
+    "arima": 9.5948,
+    "prophet": 8.0397,
+    "lstm": 15.1329,
+    "hybrid": 17.0304,
+    "ensemble": 15.8919
+  },
+  {
+    "date": "2020-11-01",
+    "observed": 14.5,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 16.8315,
+    "hybrid": 18.7272,
+    "ensemble": 17.5898
+  },
+  {
+    "date": "2020-12-01",
+    "observed": 15.74,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 15.0217,
+    "hybrid": 17.4351,
+    "ensemble": 15.9871
+  },
+  {
+    "date": "2021-01-01",
+    "observed": 21.98,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 16.2477,
+    "hybrid": 18.346,
+    "ensemble": 17.087
+  },
+  {
+    "date": "2021-02-01",
+    "observed": 19.18,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 19.7994,
+    "hybrid": 21.5352,
+    "ensemble": 20.4938
+  },
+  {
+    "date": "2021-03-01",
+    "observed": 20.92,
+    "arima": 9.5948,
+    "prophet": 13.6364,
+    "lstm": 17.6968,
+    "hybrid": 20.4563,
+    "ensemble": 18.8006
+  },
+  {
+    "date": "2021-04-01",
+    "observed": 19.07,
+    "arima": 9.5948,
+    "prophet": 15.6281,
+    "lstm": 19.9471,
+    "hybrid": 21.9031,
+    "ensemble": 20.7295
+  },
+  {
+    "date": "2021-05-01",
+    "observed": 24.7,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 18.0901,
+    "hybrid": 20.2966,
+    "ensemble": 18.9727
+  },
+  {
+    "date": "2021-06-01",
+    "observed": 12.31,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 22.633,
+    "hybrid": 23.3274,
+    "ensemble": 22.9108
+  },
+  {
+    "date": "2021-07-01",
+    "observed": 16.15,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 13.3968,
+    "hybrid": 15.8821,
+    "ensemble": 14.3909
+  },
+  {
+    "date": "2021-08-01",
+    "observed": 17.3,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 18.0516,
+    "hybrid": 18.0651,
+    "ensemble": 18.057
+  },
+  {
+    "date": "2021-09-01",
+    "observed": 13.26,
+    "arima": 9.5948,
+    "prophet": 9.1474,
+    "lstm": 16.501,
+    "hybrid": 17.9722,
+    "ensemble": 17.0895
+  },
+  {
+    "date": "2021-10-01",
+    "observed": 11.64,
+    "arima": 9.5948,
+    "prophet": 8.0397,
+    "lstm": 14.7701,
+    "hybrid": 16.0695,
+    "ensemble": 15.2899
+  },
+  {
+    "date": "2021-11-01",
+    "observed": 7.87,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 13.6691,
+    "hybrid": 14.7857,
+    "ensemble": 14.1157
+  },
+  {
+    "date": "2021-12-01",
+    "observed": 9.54,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 11.1741,
+    "hybrid": 12.7088,
+    "ensemble": 11.788
+  },
+  {
+    "date": "2022-01-01",
+    "observed": 16.8,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 12.0353,
+    "hybrid": 12.7237,
+    "ensemble": 12.3107
+  },
+  {
+    "date": "2022-02-01",
+    "observed": 19.14,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 15.8885,
+    "hybrid": 16.6209,
+    "ensemble": 16.1814
+  },
+  {
+    "date": "2022-03-01",
+    "observed": 20.25,
+    "arima": 9.5948,
+    "prophet": 13.6364,
+    "lstm": 17.1718,
+    "hybrid": 17.6987,
+    "ensemble": 17.3826
+  },
+  {
+    "date": "2022-04-01",
+    "observed": 21.13,
+    "arima": 9.5948,
+    "prophet": 15.6281,
+    "lstm": 18.414,
+    "hybrid": 18.8205,
+    "ensemble": 18.5766
+  },
+  {
+    "date": "2022-05-01",
+    "observed": 14.39,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 19.1373,
+    "hybrid": 19.7154,
+    "ensemble": 19.3685
+  },
+  {
+    "date": "2022-06-01",
+    "observed": 19.4,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 15.0496,
+    "hybrid": 16.3087,
+    "ensemble": 15.5533
+  },
+  {
+    "date": "2022-07-01",
+    "observed": 20.41,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 18.8864,
+    "hybrid": 18.7141,
+    "ensemble": 18.8175
+  },
+  {
+    "date": "2022-08-01",
+    "observed": 12.07,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 18.1947,
+    "hybrid": 19.0528,
+    "ensemble": 18.5379
+  },
+  {
+    "date": "2022-09-01",
+    "observed": 8.84,
+    "arima": 9.5948,
+    "prophet": 9.1474,
+    "lstm": 13.5725,
+    "hybrid": 15.0395,
+    "ensemble": 14.1593
+  },
+  {
+    "date": "2022-10-01",
+    "observed": 7.44,
+    "arima": 9.5948,
+    "prophet": 8.0397,
+    "lstm": 12.0938,
+    "hybrid": 12.8751,
+    "ensemble": 12.4063
+  },
+  {
+    "date": "2022-11-01",
+    "observed": 10.83,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 10.5778,
+    "hybrid": 10.2271,
+    "ensemble": 10.4375
+  },
+  {
+    "date": "2022-12-01",
+    "observed": 11.42,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 12.2124,
+    "hybrid": 12.4312,
+    "ensemble": 12.2999
+  },
+  {
+    "date": "2023-01-01",
+    "observed": 14.16,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 12.1285,
+    "hybrid": 12.5192,
+    "ensemble": 12.2848
+  },
+  {
+    "date": "2023-02-01",
+    "observed": 13.19,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 13.9042,
+    "hybrid": 14.2618,
+    "ensemble": 14.0473
+  },
+  {
+    "date": "2023-03-01",
+    "observed": 16.84,
+    "arima": 9.5948,
+    "prophet": 13.6364,
+    "lstm": 13.2465,
+    "hybrid": 13.4401,
+    "ensemble": 13.3239
+  },
+  {
+    "date": "2023-05-01",
+    "observed": 14.93,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 15.7565,
+    "hybrid": 15.814,
+    "ensemble": 15.7795
+  },
+  {
+    "date": "2023-06-01",
+    "observed": 12.96,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 14.3553,
+    "hybrid": 13.8346,
+    "ensemble": 14.147
+  },
+  {
+    "date": "2023-07-01",
+    "observed": 18.02,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 13.6432,
+    "hybrid": 13.1122,
+    "ensemble": 13.4308
+  },
+  {
+    "date": "2023-08-01",
+    "observed": 14.64,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 16.5819,
+    "hybrid": 15.5564,
+    "ensemble": 16.1717
+  },
+  {
+    "date": "2023-11-01",
+    "observed": 24.72,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 14.1209,
+    "hybrid": 14.0716,
+    "ensemble": 14.1012
+  },
+  {
+    "date": "2023-12-01",
+    "observed": 20.04,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 21.1246,
+    "hybrid": 19.6223,
+    "ensemble": 20.5237
+  },
+  {
+    "date": "2024-01-01",
+    "observed": 20.59,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 16.8818,
+    "hybrid": 17.0717,
+    "ensemble": 16.9578
+  },
+  {
+    "date": "2024-02-01",
+    "observed": 19.4,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 19.2596,
+    "hybrid": 18.5873,
+    "ensemble": 18.9907
+  },
+  {
+    "date": "2024-03-01",
+    "observed": 24.22,
+    "arima": 9.5948,
+    "prophet": 13.6364,
+    "lstm": 17.545,
+    "hybrid": 18.1973,
+    "ensemble": 17.8059
+  },
+  {
+    "date": "2024-04-01",
+    "observed": 31.86,
+    "arima": 9.5948,
+    "prophet": 15.6281,
+    "lstm": 21.4744,
+    "hybrid": 22.5155,
+    "ensemble": 21.8908
+  },
+  {
+    "date": "2024-05-01",
+    "observed": 29.18,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 25.6405,
+    "hybrid": 27.115,
+    "ensemble": 26.2303
+  },
+  {
+    "date": "2024-06-01",
+    "observed": 27.43,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 23.6973,
+    "hybrid": 25.2639,
+    "ensemble": 24.3239
+  },
+  {
+    "date": "2024-07-01",
+    "observed": 35.31,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 24.0236,
+    "hybrid": 24.9942,
+    "ensemble": 24.4119
+  },
+  {
+    "date": "2024-08-01",
+    "observed": 25.83,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 29.389,
+    "hybrid": 29.1063,
+    "ensemble": 29.2759
+  },
+  {
+    "date": "2024-09-01",
+    "observed": 20.75,
+    "arima": 9.5948,
+    "prophet": 9.1474,
+    "lstm": 21.182,
+    "hybrid": 24.52,
+    "ensemble": 22.5172
+  },
+  {
+    "date": "2024-10-01",
+    "observed": 22.89,
+    "arima": 9.5948,
+    "prophet": 8.0397,
+    "lstm": 21.1119,
+    "hybrid": 23.2719,
+    "ensemble": 21.9759
+  },
+  {
+    "date": "2024-11-01",
+    "observed": 23.03,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 21.0696,
+    "hybrid": 23.3035,
+    "ensemble": 21.9631
+  },
+  {
+    "date": "2024-12-01",
+    "observed": 21.88,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 21.0498,
+    "hybrid": 23.395,
+    "ensemble": 21.9879
+  },
+  {
+    "date": "2025-01-01",
+    "observed": 30.96,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 20.2742,
+    "hybrid": 23.1547,
+    "ensemble": 21.4264
+  },
+  {
+    "date": "2025-02-01",
+    "observed": 29.57,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 27.0334,
+    "hybrid": 28.6226,
+    "ensemble": 27.6691
+  },
+  {
+    "date": "2025-03-01",
+    "observed": 30.99,
+    "arima": 9.5948,
+    "prophet": 13.6364,
+    "lstm": 24.2662,
+    "hybrid": 28.0704,
+    "ensemble": 25.7879
+  },
+  {
+    "date": "2025-04-01",
+    "observed": 31.26,
+    "arima": 9.5948,
+    "prophet": 15.6281,
+    "lstm": 27.747,
+    "hybrid": 30.7361,
+    "ensemble": 28.9426
+  },
+  {
+    "date": "2025-05-01",
+    "observed": 27.91,
+    "arima": 9.5948,
+    "prophet": 13.0114,
+    "lstm": 26.6744,
+    "hybrid": 30.9579,
+    "ensemble": 28.3878
+  },
+  {
+    "date": "2025-06-01",
+    "observed": 27.2,
+    "arima": 9.5948,
+    "prophet": 13.709,
+    "lstm": 25.4497,
+    "hybrid": 30.1556,
+    "ensemble": 27.3321
+  },
+  {
+    "date": "2025-07-01",
+    "observed": 33.5,
+    "arima": 9.5948,
+    "prophet": 14.9324,
+    "lstm": 25.2275,
+    "hybrid": 29.9307,
+    "ensemble": 27.1088
+  },
+  {
+    "date": "2025-08-01",
+    "observed": 22.95,
+    "arima": 9.5948,
+    "prophet": 10.8596,
+    "lstm": 29.8164,
+    "hybrid": 33.5776,
+    "ensemble": 31.3209
+  },
+  {
+    "date": "2025-09-01",
+    "observed": 23.2,
+    "arima": 9.5948,
+    "prophet": 9.1474,
+    "lstm": 20.6369,
+    "hybrid": 27.5864,
+    "ensemble": 23.4167
+  },
+  {
+    "date": "2025-10-01",
+    "observed": 27.89,
+    "arima": 9.5948,
+    "prophet": 8.0397,
+    "lstm": 24.4346,
+    "hybrid": 28.8329,
+    "ensemble": 26.1939
+  },
+  {
+    "date": "2025-11-01",
+    "observed": 17.3,
+    "arima": 9.5948,
+    "prophet": 7.2139,
+    "lstm": 25.0852,
+    "hybrid": 30.0873,
+    "ensemble": 27.086
+  },
+  {
+    "date": "2025-12-01",
+    "observed": 26.32,
+    "arima": 9.5948,
+    "prophet": 8.9829,
+    "lstm": 17.934,
+    "hybrid": 23.9942,
+    "ensemble": 20.3581
+  },
+  {
+    "date": "2026-01-01",
+    "observed": 24.25,
+    "arima": 9.5948,
+    "prophet": 10.3483,
+    "lstm": 26.2207,
+    "hybrid": 29.5093,
+    "ensemble": 27.5361
+  },
+  {
+    "date": "2026-02-01",
+    "observed": 27.98,
+    "arima": 9.5948,
+    "prophet": 11.3236,
+    "lstm": 21.3091,
+    "hybrid": 26.7439,
+    "ensemble": 23.483
+  }
+]

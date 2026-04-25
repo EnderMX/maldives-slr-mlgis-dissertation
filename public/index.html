@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maldives Sea Level Rise Dashboard | OneMap Integration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+</head>
+<body>
+
+<!-- Futuristic animated grid background -->
+<div class="grid-background">
+  <div class="grid-lines"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<!-- Ambient glow orbs -->
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+<div class="ambient-orb orb-3"></div>
+
+<!-- Scanning radar effect -->
+<div class="scan-effect"></div>
+
+<!-- Floating data particles -->
+<div class="data-particles" id="dataParticles"></div>
+
+<header>
+  <div>
+    <h1>Maldives Sea Level Rise Dashboard</h1>
+    <div class="header-sub">S1701391 &nbsp;·&nbsp; UFCF9Y-60-M &nbsp;·&nbsp; MSc Information Technology</div>
+  </div>
+  <div class="header-right">
+    <label for="scenarioSelect">IPCC Scenario</label>
+    <select id="scenarioSelect">
+      <option value="SSP1-2.6_2050">SSP1-2.6 · 2050 (+0.30m)</option>
+      <option value="SSP1-2.6_2100">SSP1-2.6 · 2100 (+0.50m)</option>
+      <option value="SSP5-8.5_2050">SSP5-8.5 · 2050 (+0.50m)</option>
+      <option value="SSP5-8.5_2100" selected>SSP5-8.5 · 2100 (+1.00m)</option>
+      <option value="SSP5-8.5_2100_surge">SSP5-8.5 · 2100 + Surge (+1.50m)</option>
+    </select>
+  </div>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-page="overview">Overview</button>
+  <button class="nav-btn" data-page="map">Flood Map</button>
+  <button class="nav-btn" data-page="rankings">Rankings</button>
+  <button class="nav-btn" data-page="projections">Sea Level</button>
+  <button class="nav-btn" data-page="methodology">Methodology</button>
+  <button class="nav-btn" data-page="context">Context</button>
+</nav>
+
+<main>
+  <section id="page-overview" class="page active">
+    <div class="disclaimer">
+      <div class="disclaimer-icon">(i)</div>
+      <div><strong>Indicative screening tool only.</strong> Results should not be used as the sole basis for community relocation or service closure decisions.</div>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Land Area Inundated by Scenario</h3>
+        <canvas id="scenarioAreaChart"></canvas>
+      </div>
+      <div class="card">
+        <h3>Population at Risk by Scenario</h3>
+        <canvas id="scenarioPopChart"></canvas>
+      </div>
+    </div>
+    <div class="card card-full">
+      <h3>Top 10 Most Vulnerable Islands , Current Scenario</h3>
+      <canvas id="top10Chart" style="max-height:280px"></canvas>
+    </div>
+  </section>
+
+  <section id="page-map" class="page">
+    <div class="card card-full">
+      <h3>Flood Exposure Map</h3>
+      <div class="map-toolbar">
+        <div class="map-search-wrap">
+          <input id="mapIslandSearch" type="text" placeholder="Search island or atoll..." autocomplete="off">
+          <ul id="mapIslandResults"></ul>
+        </div>
+        <label class="toggle-label">
+          <input type="checkbox" id="inhabitedOnly" checked>
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          <span class="toggle-text">Inhabited only</span>
+        </label>
+        <div class="map-info-text">Bubble size = area &nbsp;·&nbsp; Colour = % inundated &nbsp;·&nbsp; Scenario: <span id="mapScenarioLabel">SSP5-8.5 2100</span></div>
+      </div>
+      <div id="onemap-container" class="map-container" style="height: 520px; width: 100%; border-radius: 16px; overflow: hidden;"></div>
+      <div class="map-legend" id="mapLegend">
+        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>0-25%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div>25-50%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fb7185"></div>50-75%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff3d5a"></div>75-100%</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-rankings" class="page">
+    <div class="card card-full">
+      <h3>Island Vulnerability Rankings</h3>
+      <div class="table-controls">
+        <input id="atolFilter" type="text" placeholder="Search island name or atoll...">
+        <select id="sortBy">
+          <option value="pop" selected>Sort by Population at Risk</option>
+          <option value="vi">Sort by Vulnerability Index</option>
+          <option value="pct">Sort by % Land Inundated</option>
+        </select>
+        <label class="toggle-label">
+          <input type="checkbox" id="rankInhabitedOnly" checked>
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          <span class="toggle-text">Inhabited only</span>
+        </label>
+      </div>
+      <div class="table-wrap">
+        <table id="rankTable">
+          <thead>
+            <tr>
+              <th>Rank</th><th>Island</th><th>Atoll</th>
+              <th>Area (km )</th><th>Population</th><th>% Land</th>
+              <th>Pop. at Risk</th><th>VI Score</th>
+            </tr>
+          </thead>
+          <tbody id="rankBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-projections" class="page">
+
+    <!-- Chart 1: Historical + Projections -->
+    <div class="card card-full">
+      <h3>Historical Sea Level + ML Projections to 2100</h3>
+      <div class="chart-meta">
+        <span class="chart-meta-item">  Mal  tide gauge · UHSLC Station 108</span>
+        <span class="chart-meta-item">  Historical: Oct 1989 - Feb 2026 (423 months)</span>
+        <span class="chart-meta-item">  Projections: 2026 - 2100</span>
+        <span class="chart-meta-item">  Y-axis: anomaly relative to Oct 1989 baseline</span>
+      </div>
+      <div class="chart-callout">
+        Sea level at Mal  has risen <strong>+27.98 cm</strong> since October 1989 , a rate of <strong>4.4 mm/year</strong>.
+        The <strong style="color:#c084fc">Ensemble model</strong> (LSTM + Hybrid LSTM, weighted 0.6/0.4) achieves the best test performance (RMSE = 4.37 cm, R  = 0.535).
+        Dashed horizontal lines show IPCC AR6 thresholds: <span style="color:#fbbf24">+50 cm (SSP1-2.6)</span> and <span style="color:#ff3d5a">+100 cm (SSP5-8.5)</span> by 2100.
+        The shaded band shows Prophet's 80% confidence interval.
+      </div>
+      <canvas id="projChart" style="max-height:440px"></canvas>
+    </div>
+
+    <!-- Chart 2: Test period -->
+    <div class="card card-full">
+      <h3>Model Accuracy on Held-Out Test Period</h3>
+      <div class="chart-meta">
+        <span class="chart-meta-item">  Test set: Nov 2018 - Feb 2026 (85 months)</span>
+        <span class="chart-meta-item">   Not seen during training , true out-of-sample evaluation</span>
+        <span class="chart-meta-item">  Includes 2019-2020 extreme positive IOD event</span>
+      </div>
+      <div class="chart-callout">
+        The test period includes the <strong>2019-2020 extreme positive Indian Ocean Dipole (IOD) event</strong> (DMI peak = 0.96 degC),
+        which pushed sea levels at Mal  significantly above the historical trend.
+        ARIMA and Prophet fail here (R  &lt; -1) because they can only model linear trends.
+        The LSTM and Hybrid LSTM successfully track the IOD-driven anomaly through their recurrent memory.
+      </div>
+      <canvas id="testChart" style="max-height:340px"></canvas>
+    </div>
+
+    <!-- Model metrics -->
+    <div class="card card-full">
+      <h3>ML Model Performance , All 8 Models</h3>
+      <div class="chart-meta">
+        <span class="chart-meta-item">  RMSE = Root Mean Square Error in cm (lower = better)</span>
+        <span class="chart-meta-item">  R  / NSE = Variance explained (1.0 = perfect, below 0 = worse than predicting the average)</span>
+        <span class="chart-meta-item">  Skill Score = improvement over persistence baseline (above 0 = better than last month's value)</span>
+        <span class="chart-meta-item">  F1 = threshold exceedance accuracy (sea level &gt; +8 cm anomaly)</span>
+        <span class="chart-meta-item">  Best model highlighted</span>
+      </div>
+      <div id="metricsTable"></div>
+      <div class="card card-full" style="margin-top:1.5rem">
+        <h3>F1 Score &amp; Skill Score , Visual Comparison</h3>
+        <div class="chart-meta">
+          <span class="chart-meta-item">F1 Score: ability to detect dangerous sea level months (threshold &gt; +8 cm anomaly)</span>
+          <span class="chart-meta-item">Skill Score: improvement over a naive persistence forecast</span>
+        </div>
+        <canvas id="perfChart" style="max-height:320px"></canvas>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="page-methodology" class="page">
+    <div class="methodology-content">
+      <h2>Methodology & Data Sources</h2>
+      <h3>Phase 1: GIS Flood Inundation</h3>
+      <p>Static bathtub model applied to SRTM 30m DEM data across all 181 inhabited Maldivian islands. Island elevation profiles are parameterised by mean elevation, maximum elevation, and fraction of land below 1m. Flood inundation is computed for 5 IPCC AR6 scenarios including a compound storm surge scenario.</p>
+      <h3>Phase 2: Machine Learning Sea Level Prediction</h3>
+      <p>Eight models trained and evaluated on 38 years of UHSLC tide gauge data (Station 108, Mal , 1988-2026). The Hybrid LSTM incorporates real NOAA monthly ONI and DMI climate indices as exogenous predictors. An 80/20 chronological train/test split was used; all models evaluated on identical held-out test set.</p>
+      <table class="method-table">
+        <thead><tr><th>Model</th><th>RMSE (cm)</th><th>R </th><th>Framework</th></tr></thead>
+        <tbody>
+          <tr><td>Ensemble (LSTM+Hybrid)</td><td>4.37</td><td>0.535</td><td>Pure JS   Best</td></tr>
+          <tr><td>Hybrid LSTM (MSL+ONI+DMI)</td><td>4.38</td><td>0.534</td><td>Pure JS</td></tr>
+          <tr><td>LSTM (univariate)</td><td>4.58</td><td>0.490</td><td>Pure JS</td></tr>
+          <tr><td>Random Forest</td><td>5.61</td><td>0.235</td><td>Python/sklearn</td></tr>
+          <tr><td>Gradient Boosting</td><td>5.98</td><td>0.130</td><td>Python/sklearn</td></tr>
+          <tr><td>XGBoost</td><td>5.99</td><td>0.128</td><td>Python/XGBoost</td></tr>
+          <tr><td>ARIMA(1,1,0)</td><td>11.90</td><td>-2.44</td><td>Pure JS</td></tr>
+          <tr><td>Prophet (additive)</td><td>10.18</td><td>-1.52</td><td>Pure JS</td></tr>
+        </tbody>
+      </table>
+      <h3>Phase 3: Dashboard</h3>
+      <p>Node.js/Express server with Chart.js and OneMap API frontend. All outputs pre-computed as JSON files in <code>outputs/</code>. Deploy with <code>node server.js</code>.</p>
+      <h3>Data Sources</h3>
+      <table class="method-table">
+        <thead><tr><th>Dataset</th><th>Source</th><th>File</th></tr></thead>
+        <tbody>
+          <tr><td>Monthly Sea Level</td><td>UHSLC Station 108</td><td>data/male_sealevel.csv</td></tr>
+          <tr><td>ONI Index</td><td>NOAA CPC</td><td>data/oni.csv</td></tr>
+          <tr><td>DMI Index</td><td>NOAA PSL</td><td>data/dmi.csv</td></tr>
+          <tr><td>Island registry</td><td>OneMap ArcGIS FeatureServer</td><td>data/islands.json</td></tr>
+          <tr><td>Elevation DEM</td><td>NASA SRTM</td><td>Parameterised</td></tr>
+        </tbody>
+      </table>
+      <h3>Run the Analysis</h3>
+      <pre>npm install && pip install -r requirements.txt
+npm run analyse           # LSTM models
+npm run analyse:advanced  # RF + GB + XGBoost
+node server.js            # Dashboard at http://localhost:3000</pre>
+      <div class="citation">
+        Mahmood, M.Z. (2026) Predicting Sea Level Rise Impact on Maldivian Islands: A Machine Learning Approach for Climate Adaptation Planning. MSc Dissertation, Villa College / University of the West of England, Bristol. Module UFCF9Y-60-M.
+      </div>
+    </div>
+  </section>
+
+  <section id="page-context" class="page">
+    <div class="methodology-content">
+      <h2>International Context</h2>
+      <p>How does this study compare to similar work in other countries? Four comparison groups are presented below.</p>
+
+      <h3>Pacific Small Island States</h3>
+      <p>Storlazzi et al. (2018) modelled wave-driven flooding for Pacific atoll islands using a physics-based Boussinesq wave model. That study achieves higher physical accuracy but covers three islands. This framework covers all 181 inhabited Maldivian islands using a simpler bathtub model , a deliberate trade-off of precision for national coverage. The 38-year Male tide gauge record is also substantially longer than most Pacific records (typically 20 to 25 years), giving the ML component a meaningful training data advantage.</p>
+      <p>For Kiribati, Tuvalu and the Marshall Islands most national assessments use CMIP6 projections downscaled to individual islands rather than ML forecasting from local station records. The integrated ML-plus-GIS approach used here has not been applied at national scale to any Pacific SIDS.</p>
+
+      <h3>Bangladesh FFWC , Closest Operational Equivalent</h3>
+      <p>The Bangladesh Flood Forecasting and Warning Centre (FFWC) has deployed LSTM-based models for real-time tidal and river level forecasting (Kabir et al., 2020). Their published RMSE for tidal station predictions is 3 to 6 cm , directly comparable to the Ensemble RMSE of 4.37 cm achieved here. The key difference is that the FFWC system runs on live government servers with real sensor feeds and issues operational alerts. This dashboard uses pre-computed outputs. The implication is that the Maldives has the technical building blocks for an equivalent operational system.</p>
+
+      <h3>Netherlands and Australia</h3>
+      <p>The Netherlands uses Deltares Delft3D hydrodynamic models for coastal flood simulation, incorporating wave dynamics, storm surge and bathymetric data at fine resolution. This achieves higher physical accuracy but requires national LiDAR coverage, high-resolution bathymetric surveys and substantial computing infrastructure , none of which exist at national scale for the Maldives.</p>
+      <p>Australia's National Coastal Vulnerability Assessment (DCCEE, 2011) is the closest structural parallel: a national-scale vulnerability index producing ranked coastal segments. Australia uses a six-variable scoring system compared to the three-variable VI used here. This framework adds the ML forecasting component and the live OneMap API integration, neither of which appear in the Australian assessment.</p>
+
+      <h3>Key Differentiator</h3>
+      <p>Across all comparison groups, the unique contribution of this study is the combination of three things that have not previously been integrated: ML sea level forecasting from a long local tide gauge record, national-scale GIS vulnerability ranking for all inhabited islands, and live government data API integration via OneMap. Each component individually has precedents. Their combination in a SIDS context does not.</p>
+
+      <div class="card card-full" style="margin-top:2rem">
+        <h3>How This Study Compares</h3>
+        <table class="method-table">
+          <thead>
+            <tr><th>Study / System</th><th>Country</th><th>Approach</th><th>Islands / Scale</th><th>ML Component</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>This study</strong></td><td>Maldives</td><td>Bathtub GIS + LSTM Ensemble</td><td>181 islands national</td><td>8 models, RMSE 4.37 cm</td></tr>
+            <tr><td>Storlazzi et al. (2018)</td><td>Pacific SIDS</td><td>Boussinesq wave model</td><td>3 islands</td><td>None</td></tr>
+            <tr><td>Kabir et al. / FFWC</td><td>Bangladesh</td><td>LSTM tidal forecasting</td><td>Operational stations</td><td>RMSE 3-6 cm</td></tr>
+            <tr><td>Deltares / Delft3D</td><td>Netherlands</td><td>Hydrodynamic model</td><td>National</td><td>None</td></tr>
+            <tr><td>DCCEE (2011)</td><td>Australia</td><td>6-variable VI assessment</td><td>National coastline</td><td>None</td></tr>
+            <tr><td>Amores et al. (2021)</td><td>Maldives</td><td>Wave-driven inundation</td><td>Selected islands</td><td>None</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script src="js/onemap.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

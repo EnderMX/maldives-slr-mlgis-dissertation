@@ -1,0 +1,251 @@
+{
+  "phase1": {
+    "SSP1-2.6_2050": {
+      "n_islands": 181,
+      "total_area_km2": 673.76,
+      "inundated_area_km2": 142.62,
+      "pct_land_inundated": 21.17,
+      "total_population": 494740,
+      "pop_at_risk": 88410,
+      "pct_pop_at_risk": 17.87,
+      "n_islands_gt50pct": 0,
+      "n_islands_gt80pct": 0,
+      "top5_vulnerable": [
+        {
+          "name": "Maafushi",
+          "atoll": "Kaafu",
+          "vi": 0.9643,
+          "pct": 28.5
+        },
+        {
+          "name": "Noonu Island 13",
+          "atoll": "Noonu",
+          "vi": 0.9442,
+          "pct": 28.44
+        },
+        {
+          "name": "Gaadhoo",
+          "atoll": "Laamu",
+          "vi": 0.9435,
+          "pct": 28.08
+        },
+        {
+          "name": "Dhonfanu",
+          "atoll": "Baa",
+          "vi": 0.941,
+          "pct": 28.26
+        },
+        {
+          "name": "Meemu Island 10",
+          "atoll": "Meemu",
+          "vi": 0.9342,
+          "pct": 28.47
+        }
+      ]
+    },
+    "SSP1-2.6_2100": {
+      "n_islands": 181,
+      "total_area_km2": 673.76,
+      "inundated_area_km2": 237.7,
+      "pct_land_inundated": 35.28,
+      "total_population": 494740,
+      "pop_at_risk": 147368,
+      "pct_pop_at_risk": 29.79,
+      "n_islands_gt50pct": 0,
+      "n_islands_gt80pct": 0,
+      "top5_vulnerable": [
+        {
+          "name": "Maafushi",
+          "atoll": "Kaafu",
+          "vi": 0.9643,
+          "pct": 47.5
+        },
+        {
+          "name": "Noonu Island 13",
+          "atoll": "Noonu",
+          "vi": 0.9442,
+          "pct": 47.4
+        },
+        {
+          "name": "Gaadhoo",
+          "atoll": "Laamu",
+          "vi": 0.9435,
+          "pct": 46.8
+        },
+        {
+          "name": "Dhonfanu",
+          "atoll": "Baa",
+          "vi": 0.941,
+          "pct": 47.1
+        },
+        {
+          "name": "Meemu Island 10",
+          "atoll": "Meemu",
+          "vi": 0.9342,
+          "pct": 47.45
+        }
+      ]
+    },
+    "SSP5-8.5_2050": {
+      "n_islands": 181,
+      "total_area_km2": 673.76,
+      "inundated_area_km2": 237.7,
+      "pct_land_inundated": 35.28,
+      "total_population": 494740,
+      "pop_at_risk": 147368,
+      "pct_pop_at_risk": 29.79,
+      "n_islands_gt50pct": 0,
+      "n_islands_gt80pct": 0,
+      "top5_vulnerable": [
+        {
+          "name": "Maafushi",
+          "atoll": "Kaafu",
+          "vi": 0.9643,
+          "pct": 47.5
+        },
+        {
+          "name": "Noonu Island 13",
+          "atoll": "Noonu",
+          "vi": 0.9442,
+          "pct": 47.4
+        },
+        {
+          "name": "Gaadhoo",
+          "atoll": "Laamu",
+          "vi": 0.9435,
+          "pct": 46.8
+        },
+        {
+          "name": "Dhonfanu",
+          "atoll": "Baa",
+          "vi": 0.941,
+          "pct": 47.1
+        },
+        {
+          "name": "Meemu Island 10",
+          "atoll": "Meemu",
+          "vi": 0.9342,
+          "pct": 47.45
+        }
+      ]
+    },
+    "SSP5-8.5_2100": {
+      "n_islands": 181,
+      "total_area_km2": 673.76,
+      "inundated_area_km2": 475.39,
+      "pct_land_inundated": 70.56,
+      "total_population": 494740,
+      "pop_at_risk": 294718,
+      "pct_pop_at_risk": 59.57,
+      "n_islands_gt50pct": 180,
+      "n_islands_gt80pct": 50,
+      "top5_vulnerable": [
+        {
+          "name": "Maafushi",
+          "atoll": "Kaafu",
+          "vi": 0.9643,
+          "pct": 95
+        },
+        {
+          "name": "Noonu Island 13",
+          "atoll": "Noonu",
+          "vi": 0.9442,
+          "pct": 94.8
+        },
+        {
+          "name": "Gaadhoo",
+          "atoll": "Laamu",
+          "vi": 0.9435,
+          "pct": 93.6
+        },
+        {
+          "name": "Dhonfanu",
+          "atoll": "Baa",
+          "vi": 0.941,
+          "pct": 94.2
+        },
+        {
+          "name": "Meemu Island 10",
+          "atoll": "Meemu",
+          "vi": 0.9342,
+          "pct": 94.9
+        }
+      ]
+    },
+    "SSP5-8.5_2100_surge": {
+      "n_islands": 181,
+      "total_area_km2": 673.76,
+      "inundated_area_km2": 605.77,
+      "pct_land_inundated": 89.91,
+      "total_population": 494740,
+      "pop_at_risk": 465223,
+      "pct_pop_at_risk": 94.03,
+      "n_islands_gt50pct": 181,
+      "n_islands_gt80pct": 157,
+      "top5_vulnerable": [
+        {
+          "name": "Isdhoo",
+          "atoll": "Laamu",
+          "vi": 0.9828,
+          "pct": 100
+        },
+        {
+          "name": "Felidhoo",
+          "atoll": "Vaavu",
+          "vi": 0.9782,
+          "pct": 100
+        },
+        {
+          "name": "Nilandhoo",
+          "atoll": "Faafu",
+          "vi": 0.9769,
+          "pct": 100
+        },
+        {
+          "name": "Dhuvaafaru",
+          "atoll": "Raa",
+          "vi": 0.9756,
+          "pct": 100
+        },
+        {
+          "name": "Gaadhoo",
+          "atoll": "Laamu",
+          "vi": 0.9684,
+          "pct": 100
+        }
+      ]
+    }
+  },
+  "ml_metrics": [
+    {
+      "Model": "ARIMA",
+      "RMSE_cm": 11.9045,
+      "MAE_cm": 10.156,
+      "R2": -2.4438
+    },
+    {
+      "Model": "Prophet",
+      "RMSE_cm": 10.1795,
+      "MAE_cm": 8.3697,
+      "R2": -1.5181
+    },
+    {
+      "Model": "LSTM",
+      "RMSE_cm": 4.5824,
+      "MAE_cm": 3.6859,
+      "R2": 0.4897
+    },
+    {
+      "Model": "Hybrid LSTM",
+      "RMSE_cm": 4.3781,
+      "MAE_cm": 3.394,
+      "R2": 0.5342
+    },
+    {
+      "Model": "Ensemble (LSTM+Hybrid)",
+      "RMSE_cm": 4.3734,
+      "MAE_cm": 3.4482,
+      "R2": 0.5352
+    }
+  ]
+}
