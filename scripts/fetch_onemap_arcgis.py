@@ -31,8 +31,9 @@ QUERY_URL   = f'{BASE_URL}/query'
 OUT_PATH    = os.path.join(os.path.dirname(__file__), '..', 'data', 'islands.json')
 BATCH_SIZE  = 100
 
-# Category values in OneMap that indicate an inhabited island
-INHABITED_CATEGORIES = {'inhabited', 'capital', 'inhabited island', 'island'}
+# Category values in OneMap that indicate an inhabited island.
+# 'island' deliberately excluded - too broad, matches reefs and uninhabited land.
+INHABITED_CATEGORIES = {'inhabited', 'capital', 'inhabited island', 'residential'}
 
 # Fetch helpers
 def fetch_json(url, params):
@@ -118,20 +119,29 @@ def pick(props, *keys, default=''):
             return v
     return default
 
-def is_inhabited(props):
+def is_inhabited(props, name=''):
     """Return True if the OneMap feature represents an inhabited island."""
     # Primary: category field
-    cat = str(pick(props, 'category', 'Category', default='')).lower().strip()
+    cat = str(pick(props, 'category', 'Category', 'cat', default='')).lower().strip()
     if cat in INHABITED_CATEGORIES:
         return True
-    # Secondary: capital flag (Male etc.) , always inhabited
+    # Secondary: capital flag (Male etc.)
     capital = str(pick(props, 'capital', 'Capital', default='')).upper().strip()
     if capital == 'Y':
         return True
     # Tertiary: Usage field
-    usage = str(pick(props, 'Usage', 'usage', default='')).lower().strip()
+    usage = str(pick(props, 'Usage', 'usage', 'landuse', default='')).lower().strip()
     if 'inhabited' in usage or 'residential' in usage:
         return True
+    # Quaternary: island appears in Census 2022 population lookup
+    if name:
+        name_lower = name.lower()
+        if name_lower in CENSUS_POPULATIONS:
+            return True
+        import unicodedata
+        clean = unicodedata.normalize('NFD', name).encode('ascii', 'ignore').decode().lower()
+        if clean in CENSUS_POPULATIONS:
+            return True
     return False
 
 # -- Census 2022 population data (hardcoded , independent of islands.json state)
@@ -375,6 +385,11 @@ def main():
             no_name += 1
             continue  # skip unnamed features (reefs, rocks etc.)
 
+        # Filter: only keep inhabited islands
+        if not is_inhabited(props, name):
+            skipped += 1
+            continue
+
         atoll = str(pick(props,
             'atoll', 'AtollName', 'atoll_name', 'ATOLL', 'ATOLL_NAME',
             default='Unknown')).strip()
@@ -389,21 +404,22 @@ def main():
             area = round(area_ha / 100, 4)  # ha -> km^2
 
         # Population
-        # Census 2022 lookup , exact match first, then normalised
-        pop = pop_lookup.get(name.lower(), 0)
+        # Census 2022 lookup - try (name, atoll) first to handle duplicate island names
+        import unicodedata
+        def norm(s): return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode().lower().strip()
+        atoll_key = f"{norm(name)} ({norm(atoll)})"
+        pop = pop_lookup.get(atoll_key, 0)
         if pop == 0:
-            # Strip accents (Male -> Male) and try again
-            import unicodedata
-            clean_name = unicodedata.normalize('NFD', name).encode('ascii', 'ignore').decode().lower()
-            pop = pop_lookup.get(clean_name, 0)
+            pop = pop_lookup.get(name.lower(), 0)
         if pop == 0:
-            # Strip common suffixes
-            clean = name.lower().replace(' island', '').strip()
+            pop = pop_lookup.get(norm(name), 0)
+        if pop == 0:
+            clean = norm(name).replace(' island', '').strip()
             pop = pop_lookup.get(clean, 0)
         if pop == 0:
-            # Substring match for slight name variations
+            # Substring match fallback
             for k, v in pop_lookup.items():
-                if len(k) > 3 and (k in name.lower() or name.lower() in k):
+                if len(k) > 3 and (k in norm(name) or norm(name) in k):
                     pop = v
                     break
 

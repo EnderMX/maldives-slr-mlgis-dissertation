@@ -683,14 +683,21 @@ function runHybridLSTM (train, test, { oniMap, dmiMap }) {
   const nFuture    = (2100 - lastDate.getFullYear()) * 12;
   const rollingWin = seqs[seqs.length - 1].slice();  // last known window
   const futureRows = [];
+  let lastValidPred = mslSc[mslSc.length - 1]; // fallback if prediction blows up
   for (let i = 0; i < nFuture; i++) {
-    const pred    = net.predict(rollingWin.slice(-WINDOW));
+    let pred;
+    try {
+      pred = net.predict(rollingWin.slice(-WINDOW));
+      if (!isFinite(pred) || isNaN(pred)) pred = lastValidPred;
+      else lastValidPred = pred;
+    } catch (e) {
+      pred = lastValidPred; // use last valid scaled value
+    }
     const predMSL = scaleMSL.inverseVal(pred);
     futureRows.push({
       date:           dateStr(addMonths(lastDate, i + 1)),
       msl_cm_hybrid:  Math.round(predMSL * 1e4) / 1e4,
     });
-    // Roll window: next step uses predicted MSL + neutral climate
     rollingWin.push([pred, futONI, futDMI]);
   }
 
