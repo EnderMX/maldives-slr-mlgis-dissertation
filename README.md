@@ -164,7 +164,7 @@ python scripts/convert_dmi.py
 python scripts/fetch_onemap_arcgis.py
 ```
 
-This hits the OneMap public ArcGIS endpoint and downloads real GPS polygon centroids for all 1,560 island features. It takes about 30-60 seconds and requires an internet connection. After it finishes, re-run the analysis to regenerate outputs with the updated coordinates:
+This hits the OneMap public ArcGIS endpoint, fetches all island polygon features, filters to the 181 inhabited islands, and writes real GPS polygon centroids to islands.json. It takes about 30-60 seconds and requires an internet connection. After it finishes, re-run the analysis to regenerate outputs with the updated coordinates:
 
 ```bash
 npm run analyse
