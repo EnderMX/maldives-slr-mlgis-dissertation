@@ -117,7 +117,7 @@ function summarise (rows) {
 }
 
 // Main
-function runPhase1 (islands) {
+function runPhase1 (islands, suffix = '') {
   ensureDirs();
   console.log('\n-- Phase 1: GIS Flood Inundation ------------------------');
   console.log(`  Islands loaded: ${islands.length}`);
@@ -135,7 +135,7 @@ function runPhase1 (islands) {
     summaryAll[scenario] = summary;
     allResults[scenario] = rows;
 
-    saveJSON(`${scenario}_vulnerability.json`, rows);
+    saveJSON(`${scenario}_vulnerability${suffix}.json`, rows);
     console.log(`done  [${summary.pct_land_inundated}% land  |  ${summary.pop_at_risk.toLocaleString()} people]`);
   }
 

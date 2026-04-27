@@ -120,215 +120,45 @@ def pick(props, *keys, default=''):
     return default
 
 def is_inhabited(props, name=''):
-    """Return True if the OneMap feature represents an inhabited island."""
-    # Primary: category field
-    cat = str(pick(props, 'category', 'Category', 'cat', default='')).lower().strip()
-    if cat in INHABITED_CATEGORIES:
-        return True
-    # Secondary: capital flag (Male etc.)
+    """Return True if the OneMap feature represents an inhabited island.
+
+    Uses Census 2022 exact name match as primary signal.
+    Partial/substring matching was removed - it caused uninhabited islands
+    with similar names (e.g. Vilin'gilivarufinolhu) to incorrectly pass.
+    """
+    import unicodedata
+    def norm(s):
+        return unicodedata.normalize('NFD', str(s)).encode('ascii', 'ignore').decode().lower().strip()
+    def clean(s):
+        return s.replace("'", '').replace(' ', '').replace('-', '')
+
+    # Primary: exact match in Census 2022 (handles apostrophes via clean())
+    if name:
+        n = norm(name)
+        nc = clean(n)
+        for k, v in CENSUS_POPULATIONS.items():
+            if v > 0:
+                nk = norm(k)
+                if nk == n or clean(nk) == nc:
+                    return True
+
+    # Secondary: capital flag
     capital = str(pick(props, 'capital', 'Capital', default='')).upper().strip()
     if capital == 'Y':
         return True
-    # Tertiary: Usage field
-    usage = str(pick(props, 'Usage', 'usage', 'landuse', default='')).lower().strip()
+
+    # Tertiary: category field
+    cat = str(pick(props, 'category', 'Category', 'cat', default='')).lower().strip()
+    if cat in INHABITED_CATEGORIES:
+        return True
+
+    # Quaternary: Usage field
+    usage = str(pick(props, 'Usage', 'usage', default='')).lower().strip()
     if 'inhabited' in usage or 'residential' in usage:
         return True
-    # Quaternary: island appears in Census 2022 population lookup
-    if name:
-        name_lower = name.lower()
-        if name_lower in CENSUS_POPULATIONS:
-            return True
-        import unicodedata
-        clean = unicodedata.normalize('NFD', name).encode('ascii', 'ignore').decode().lower()
-        if clean in CENSUS_POPULATIONS:
-            return True
+
     return False
 
-# -- Census 2022 population data (hardcoded , independent of islands.json state)
-# Source: Maldives Population and Housing Census 2022
-CENSUS_POPULATIONS = {
-    'Dhidhdhoo': 381,  # Haa Alif
-    'Baarah': 57,  # Haa Alif
-    'Filladhoo': 824,  # Haa Alif
-    'Hoarafushi': 788,  # Haa Alif
-    'Ihavandhoo': 116,  # Haa Alif
-    'Kelaa': 1300,  # Haa Alif
-    'Maarandhoo': 479,  # Haa Alif
-    'Kulhudhuffushi': 12000,  # Haa Dhaalu
-    'Hanimaadhoo': 170,  # Haa Dhaalu
-    'Finey': 50,  # Haa Dhaalu
-    'Kumundhoo': 176,  # Haa Dhaalu
-    'Makunudhoo': 439,  # Haa Dhaalu
-    'Naivaadhoo': 528,  # Haa Dhaalu
-    'Neykurendhoo': 317,  # Haa Dhaalu
-    'Nolhivaranfaru': 311,  # Haa Dhaalu
-    'Nolhivaram': 517,  # Haa Dhaalu
-    'Vaikaradhoo': 851,  # Haa Dhaalu
-    'Nellaidhoo': 2032,  # Haa Dhaalu
-    'Funadhoo': 3500,  # Shaviyani
-    'Goidhoo': 415,  # Shaviyani
-    'Komandoo': 153,  # Shaviyani
-    'Narudhoo': 2330,  # Shaviyani
-    'Feydhoo': 1032,  # Shaviyani
-    'Maroshi': 556,  # Shaviyani
-    'Kanditheemu': 185,  # Shaviyani
-    'Foakaidhoo': 771,  # Shaviyani
-    'Lhaimagu': 1592,  # Shaviyani
-    'Milandhoo': 425,  # Shaviyani
-    'Nalandhoo': 787,  # Shaviyani
-    'Manadhoo': 107,  # Noonu
-    'Fodhdhoo': 227,  # Noonu
-    'Holhudhoo': 540,  # Noonu
-    'Kendhikulhudhoo': 593,  # Noonu
-    'Kudafari': 207,  # Noonu
-    'Landhoo': 299,  # Noonu
-    'Lhohi': 264,  # Noonu
-    'Maafaru': 104,  # Noonu
-    'Magoodhoo': 2199,  # Noonu
-    'Miladhoo': 192,  # Noonu
-    'Velidhoo': 79,  # Noonu
-    'Noonu Island 12': 145,  # Noonu
-    'Noonu Island 13': 65,  # Noonu
-    'Ugoofaaru': 725,  # Raa
-    'Alifushi': 50,  # Raa
-    'Dhuvaafaru': 109,  # Raa
-    'Fainu': 50,  # Raa
-    'Hulhudhuffaaru': 552,  # Raa
-    'Innamaadhoo': 1804,  # Raa
-    'Kinolhas': 1795,  # Raa
-    'Maakurathu': 101,  # Raa
-    'Meedhoo': 2776,  # Raa
-    'Rasgetheemu': 821,  # Raa
-    'Ungoofaaru': 78,  # Raa
-    'Vaadhoo': 390,  # Raa
-    'Raa Island 13': 67,  # Raa
-    'Eydhafushi': 4500,  # Baa
-    'Dhonfanu': 50,  # Baa
-    'Dharavandhoo': 201,  # Baa
-    'Fehendhoo': 611,  # Baa
-    'Fulhadhoo': 687,  # Baa
-    'Goidhoo': 231,  # Baa
-    'Hithaadhoo': 1729,  # Baa
-    'Kamadhoo': 166,  # Baa
-    'Naifaru': 5000,  # Lhaviyani
-    'Hinnavaru': 725,  # Lhaviyani
-    'Kurendhoo': 1348,  # Lhaviyani
-    'Feydhoofinolhu': 756,  # Lhaviyani
-    'Olhuvelifushi': 151,  # Lhaviyani
-    'Lhaviyani Island 06': 394,  # Lhaviyani
-    'Lhaviyani Island 07': 105,  # Lhaviyani
-    'Lhaviyani Island 08': 58,  # Lhaviyani
-    'Male': 240000,  # Kaafu
-    'Hulhumale': 65000,  # Kaafu
-    'Maafushi': 3800,  # Kaafu
-    'Guraidhoo': 142,  # Kaafu
-    'Thulusdhoo': 254,  # Kaafu
-    'Dhiffushi': 339,  # Kaafu
-    'Rasdhoo': 439,  # Alifu Alifu
-    'Mathiveri': 84,  # Alifu Alifu
-    'Feridhoo': 389,  # Alifu Alifu
-    'Maalhos': 511,  # Alifu Alifu
-    'Himandhoo': 203,  # Alifu Alifu
-    'Thoddoo': 184,  # Alifu Alifu
-    'Ukulhas': 50,  # Alifu Alifu
-    'Mahibadhoo': 725,  # Alifu Dhaalu
-    'Dhidhdhoo': 223,  # Alifu Dhaalu
-    'Fenfushi': 424,  # Alifu Dhaalu
-    'Kunburudhoo': 187,  # Alifu Dhaalu
-    'Mandhoo': 277,  # Alifu Dhaalu
-    'Maamigili': 362,  # Alifu Dhaalu
-    'Omadhoo': 1656,  # Alifu Dhaalu
-    'Alifu Dhaalu Island 08': 51,  # Alifu Dhaalu
-    'Alifu Dhaalu Island 09': 405,  # Alifu Dhaalu
-    'Alifu Dhaalu Island 10': 317,  # Alifu Dhaalu
-    'Alifu Dhaalu Island 11': 148,  # Alifu Dhaalu
-    'Alifu Dhaalu Island 12': 1420,  # Alifu Dhaalu
-    'Felidhoo': 109,  # Vaavu
-    'Fulidhoo': 2947,  # Vaavu
-    'Keyodhoo': 155,  # Vaavu
-    'Rakeedhoo': 68,  # Vaavu
-    'Thinadhoo': 9000,  # Vaavu
-    'Vaavu Island 06': 418,  # Vaavu
-    'Vaavu Island 07': 1224,  # Vaavu
-    'Muli': 2500,  # Meemu
-    'Dhiggaru': 271,  # Meemu
-    'Kolhufushi': 649,  # Meemu
-    'Maduvvari': 658,  # Meemu
-    'Mulah': 228,  # Meemu
-    'Naalaafushi': 672,  # Meemu
-    'Raimandhoo': 170,  # Meemu
-    'Veyvah': 1978,  # Meemu
-    'Meemu Island 09': 220,  # Meemu
-    'Meemu Island 10': 2430,  # Meemu
-    'Nilandhoo': 67,  # Faafu
-    'Bilehdhoo': 234,  # Faafu
-    'Dharanboodhoo': 1060,  # Faafu
-    'Feeali': 1400,  # Faafu
-    'Magoodhoo': 264,  # Faafu
-    'Faafu Island 06': 66,  # Faafu
-    'Faafu Island 07': 175,  # Faafu
-    'Faafu Island 08': 416,  # Faafu
-    'Faafu Island 09': 189,  # Faafu
-    'Kudahuvadhoo': 619,  # Dhaalu
-    'Bandidhoo': 50,  # Dhaalu
-    'Gemendhoo': 1807,  # Dhaalu
-    'Hulhidhoo': 3670,  # Dhaalu
-    'Maaenboodhoo': 182,  # Dhaalu
-    'Meedhoo': 95,  # Dhaalu
-    'Veymandoo': 116,  # Thaa
-    'Buruni': 195,  # Thaa
-    'Dhiyamigili': 483,  # Thaa
-    'Gaadhiffushi': 429,  # Thaa
-    'Guraidhoo': 671,  # Thaa
-    'Hirilandhoo': 50,  # Thaa
-    'Kinbidhoo': 780,  # Thaa
-    'Madifushi': 104,  # Thaa
-    'Omadhoo': 60,  # Thaa
-    'Fonadhoo': 8500,  # Laamu
-    'Dhanbidhoo': 62,  # Laamu
-    'Gaadhoo': 2305,  # Laamu
-    'Gan': 567,  # Laamu
-    'Hithadhoo': 15000,  # Laamu
-    'Isdhoo': 57,  # Laamu
-    'Kunahandhoo': 173,  # Laamu
-    'Vilingili': 50,  # Gaafu Alifu
-    'Dhaandhoo': 340,  # Gaafu Alifu
-    'Gemanafushi': 345,  # Gaafu Alifu
-    'Kanduhulhudhoo': 1367,  # Gaafu Alifu
-    'Kolamaafushi': 1307,  # Gaafu Alifu
-    'Kondey': 99,  # Gaafu Alifu
-    'Thinadhoo': 9000,  # Gaafu Dhaalu
-    'Faresmaathodaa': 836,  # Gaafu Dhaalu
-    'Fiyoaree': 192,  # Gaafu Dhaalu
-    'Gadhdhoo': 259,  # Gaafu Dhaalu
-    'Hoadedhdhoo': 246,  # Gaafu Dhaalu
-    'Madaveli': 245,  # Gaafu Dhaalu
-    'Nadellaa': 228,  # Gaafu Dhaalu
-    'Fuvahmulah': 12000,  # Gnaviyani
-    'Gnaviyani Island 02': 99,  # Gnaviyani
-    'Gnaviyani Island 03': 50,  # Gnaviyani
-    'Gnaviyani Island 04': 106,  # Gnaviyani
-    'Gnaviyani Island 05': 153,  # Gnaviyani
-    'Gnaviyani Island 06': 50,  # Gnaviyani
-    'Gnaviyani Island 07': 237,  # Gnaviyani
-    'Gnaviyani Island 08': 144,  # Gnaviyani
-    'Gnaviyani Island 09': 184,  # Gnaviyani
-    'Gnaviyani Island 10': 192,  # Gnaviyani
-    'Gnaviyani Island 11': 81,  # Gnaviyani
-    'Hithadhoo': 15000,  # Seenu
-    'Feydhoo': 340,  # Seenu
-    'Maradhoo': 491,  # Seenu
-    'Meedhoo': 1974,  # Seenu
-    'Hulhumeedhoo': 149,  # Seenu
-    'Seenu Island 06': 865,  # Seenu
-    'Seenu Island 07': 175,  # Seenu
-    'Seenu Island 08': 120,  # Seenu
-    'Seenu Island 09': 57,  # Seenu
-    'Seenu Island 10': 50,  # Seenu
-    'Feevah': 312,  # Shaviyani
-    'Maaungoodhoo': 891,  # Shaviyani
-    'Bileffahi': 1240,  # Shaviyani
-}
 
 def load_existing_populations():
     """Returns Census 2022 population lookup (lowercase name -> population)."""
@@ -338,6 +168,21 @@ def load_existing_populations():
 
 # Main
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Fetch island data from OneMap ArcGIS FeatureServer')
+    parser.add_argument('--all', action='store_true',
+                        help='Fetch all islands including uninhabited (saves to islands_all.json)')
+    args = parser.parse_args()
+    fetch_all = args.all
+
+    # Output path depends on mode
+    global OUT_PATH
+    if fetch_all:
+        OUT_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'islands_all.json')
+        print('Mode: ALL islands (including uninhabited) -> islands_all.json')
+    else:
+        print('Mode: inhabited islands only -> islands.json')
+
     print('OneMap ArcGIS Island Data Fetcher')
     print(f'Source: {BASE_URL}')
     print()
@@ -385,8 +230,8 @@ def main():
             no_name += 1
             continue  # skip unnamed features (reefs, rocks etc.)
 
-        # Filter: only keep inhabited islands
-        if not is_inhabited(props, name):
+        # Filter: only keep inhabited islands (skip if --all flag used)
+        if not fetch_all and not is_inhabited(props, name):
             skipped += 1
             continue
 
@@ -444,8 +289,9 @@ def main():
         })
 
     print(f'\n  Total features fetched:  {len(features)}')
-    print(f'  Inhabited (kept):        {len(islands)}')
-    print(f'  Skipped (uninhabited/no-name): {skipped + no_name}')
+    mode_label = 'All islands (kept)' if fetch_all else 'Inhabited (kept)'
+    print(f'  {mode_label}:        {len(islands)}')
+    print(f'  Skipped (no geometry/no-name): {skipped + no_name}')
 
     if not islands:
         print('\nERROR: No inhabited islands found.')
@@ -460,7 +306,8 @@ def main():
     with open(OUT_PATH, 'w') as f:
         json.dump(islands, f, indent=2)
 
-    print(f'\n[OK] Wrote {len(islands)} islands to {OUT_PATH}')
+    mode_str = 'all' if fetch_all else 'inhabited'
+    print(f'\n[OK] Wrote {len(islands)} {mode_str} islands to {OUT_PATH}')
 
     # Population coverage report
     with_pop   = sum(1 for i in islands if i['population'] > 0)

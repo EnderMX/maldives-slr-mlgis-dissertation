@@ -3,6 +3,8 @@
 const state = {
   scenario: 'SSP5-8.5_2100',
   allScenarios: null,
+  allScenariosAll: null,   // all islands including uninhabited (if available)
+  showAllIslands: false,   // toggle state for rankings page
   summary: null,
   metrics: null,
   projections: null,
@@ -106,6 +108,15 @@ function setupUI() {
   if (sortBy) sortBy.addEventListener('change', renderRankings);
 
   // -- Rankings: Inhabited-only toggle ---------------------------------------
+  // All-islands toggle
+  const showAllIslandsToggle = document.getElementById('showAllIslands');
+  if (showAllIslandsToggle) {
+    showAllIslandsToggle.addEventListener('change', () => {
+      state.showAllIslands = showAllIslandsToggle.checked;
+      renderRankings();
+    });
+  }
+
   const rankInhabitedToggle = document.getElementById('rankInhabitedOnly');
   if (rankInhabitedToggle) {
     rankInhabitedToggle.addEventListener('change', () => {
@@ -177,6 +188,14 @@ async function boot() {
       fetchJSON('historical_sealevel.json'),
       fetchJSON('test_forecasts.json'),
     ]);
+
+    // Try to load all-islands dataset (optional - only available after fetch --all + npm run analyse)
+    try {
+      state.allScenariosAll = await fetchJSON('all_scenarios_all.json');
+      console.log('All-islands dataset loaded:', Object.keys(state.allScenariosAll).length, 'scenarios');
+    } catch (e) {
+      state.allScenariosAll = null; // not available - toggle will show informational message
+    }
     console.log('Data loaded successfully');
     console.log('Scenarios available:', Object.keys(state.allScenarios));
   } catch (e) {
@@ -321,14 +340,27 @@ function renderRankings() {
 
   const filter = document.getElementById('atolFilter');
   const sortBy = document.getElementById('sortBy');
-  
+  const showAllToggle = document.getElementById('showAllIslands');
+  const allNote = document.getElementById('allIslandsNote');
+  const allUnavailable = document.getElementById('allIslandsUnavailable');
+
   const filterValue = filter ? filter.value.toLowerCase().trim() : '';
   const sortValue = sortBy ? sortBy.value : 'pop';
 
-  let data = [...state.allScenarios[state.scenario]];
+  // Determine which dataset to use
+  const wantAll = showAllToggle && showAllToggle.checked;
+  const dataSource = (wantAll && state.allScenariosAll)
+    ? state.allScenariosAll
+    : state.allScenarios;
 
-  // Inhabited-only filter
-  if (state.rankInhabitedOnly) {
+  // Show/hide informational notes
+  if (allNote) allNote.style.display = (wantAll && state.allScenariosAll) ? 'inline' : 'none';
+  if (allUnavailable) allUnavailable.style.display = (wantAll && !state.allScenariosAll) ? 'inline' : 'none';
+
+  let data = [...dataSource[state.scenario]];
+
+  // Inhabited-only filter (only applies when using main dataset)
+  if (!wantAll && state.rankInhabitedOnly) {
     data = data.filter(r => r.population > 0);
   }
 

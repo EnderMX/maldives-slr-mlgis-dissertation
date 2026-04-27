@@ -48,6 +48,15 @@ async function main () {
   const islandPath = path.join(DATA_DIR, 'islands.json');
   if (!fs.existsSync(islandPath)) generateDemoIslands();
   const islands = JSON.parse(fs.readFileSync(islandPath));
+
+  // Also run GIS for all islands (including uninhabited) if islands_all.json exists
+  const islandAllPath = path.join(DATA_DIR, 'islands_all.json');
+  if (fs.existsSync(islandAllPath)) {
+    console.log('  Found islands_all.json - running GIS for all islands...');
+    const islandsAll = JSON.parse(fs.readFileSync(islandAllPath));
+    const { summary: phase1SummaryAll } = runPhase1(islandsAll, '_all');
+    console.log('  [OK] All-islands GIS complete');
+  }
   console.log(`  Islands: ${islands.length}`);
 
   // Load or generate climate indices

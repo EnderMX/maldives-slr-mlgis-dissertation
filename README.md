@@ -60,7 +60,12 @@ npm install
 pip install -r requirements.txt
 
 # Fetch real island GPS coordinates from OneMap (optional but recommended)
+# Inhabited islands only (default, produces data/islands.json):
 python scripts/fetch_onemap_arcgis.py
+
+# All islands including uninhabited (produces data/islands_all.json):
+# Required to enable the "Show all islands" toggle on the Rankings page
+python scripts/fetch_onemap_arcgis.py --all
 
 # Run the analysis (takes about 5-7 minutes)
 npm run analyse
@@ -183,3 +188,36 @@ This step runs automatically when you use `run.bat`.
 | Island names and populations | Real, Census 2022 |
 | Island coordinates | Real, fetched from OneMap (auto on run.bat) |
 | Island elevation | Parameterised from published national averages |
+
+---
+
+## Glossary
+
+| Term | Full name | What it means |
+|---|---|---|
+| RMSE | Root Mean Square Error | Average prediction error in centimetres. Lower is better. The Ensemble achieves 4.37 cm. |
+| MAE | Mean Absolute Error | Average absolute error in centimetres. Less sensitive to large outliers than RMSE. |
+| R2 / NSE | R-squared / Nash-Sutcliffe Efficiency | How much of the observed variance the model explains. 1.0 = perfect, 0 = no better than predicting the mean, below 0 = worse than the mean. |
+| MAPE | Mean Absolute Percentage Error | Error as a percentage of the mean absolute anomaly (5.11 cm). Lower is better. |
+| Skill Score | Skill Score vs persistence | Improvement over a naive forecast that just predicts last month's value. Above 0 = better than persistence. The Ensemble scores 0.47. |
+| F1 Score | F1 Score | Accuracy of detecting months when sea level exceeds the +8 cm anomaly threshold (flood warning task). Balances precision and recall. 1.0 = perfect. |
+| LSTM | Long Short-Term Memory | A type of recurrent neural network that can remember patterns over long time periods. Used here for sea level forecasting. |
+| Hybrid LSTM | Hybrid LSTM | LSTM model that uses sea level data plus climate indices (ONI and DMI) as inputs. |
+| Ensemble | Ensemble model | Weighted average of LSTM (60%) and Hybrid LSTM (40%). The best-performing model in this study. |
+| ARIMA | AutoRegressive Integrated Moving Average | Classical statistical time series model. Used as a baseline. |
+| ONI | Oceanic Nino Index | Monthly index measuring El Nino and La Nina strength in the Pacific. Affects Indian Ocean sea levels. |
+| DMI | Dipole Mode Index | Monthly index measuring the Indian Ocean Dipole. A positive IOD event (2019-2020) caused the largest sea level anomalies in the test period. |
+| IOD | Indian Ocean Dipole | A coupled ocean-atmosphere pattern in the Indian Ocean that drives multi-year sea level variability in the Maldives. |
+| ENSO | El Nino-Southern Oscillation | Pacific climate pattern with global effects. Correlated with Indian Ocean sea level via the ONI index. |
+| VI | Vulnerability Index | Composite score (0 to 1) for each island: 0.5 x land flooded + 0.3 x normalised population + 0.2 x (1/island area). Higher = more vulnerable. |
+| SSP | Shared Socioeconomic Pathway | IPCC AR6 climate scenarios. SSP1-2.6 = low emissions, SSP5-8.5 = high emissions. |
+| IPCC AR6 | Intergovernmental Panel on Climate Change Sixth Assessment Report | The authoritative international scientific assessment of climate change, published 2021. |
+| SLR | Sea Level Rise | The increase in mean sea level over time due to thermal expansion and ice melt. |
+| GIS | Geographic Information System | Software and methods for capturing, storing, and analysing spatial data. Used here for flood inundation mapping. |
+| SRTM | Shuttle Radar Topography Mission | NASA satellite elevation data at 30m resolution. Used to estimate island elevation in the absence of national LiDAR coverage. |
+| OneMap | OneMap Maldives | The official national mapping platform of the Maldives government, providing island boundary and registry data via an ArcGIS FeatureServer API. |
+| UHSLC | University of Hawaii Sea Level Center | Maintains the 38-year tide gauge record at Male (Station 108) used to train all ML models. |
+| Bathtub model | Bathtub inundation model | Simple flood model that classifies all land below a sea level threshold as inundated. Used for national-scale screening. |
+
+---
+

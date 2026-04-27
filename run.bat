@@ -121,6 +121,15 @@ echo   (requires internet, ~30-60 seconds ) skip with Ctrl+C if offline)
 !PYTHON! scripts\fetch_onemap_arcgis.py
 if errorlevel 1 (
     echo   WARNING: OneMap fetch failed. Using existing islands.json coordinates.
+
+:: OneMap: fetch all islands including uninhabited (for extended rankings view)
+echo   Fetching all island features from OneMap ArcGIS...
+
+!PYTHON! scripts\fetch_onemap_arcgis.py --all
+
+    echo   WARNING: All-islands fetch failed. Extended rankings will be unavailable.
+
+    echo   All island coordinates updated.
     echo   Map will show atoll-level estimates instead of exact GPS positions.
 ) else (
     echo   OneMap coordinates updated successfully.

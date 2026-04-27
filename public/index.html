@@ -54,6 +54,7 @@
   <button class="nav-btn" data-page="projections">Sea Level</button>
   <button class="nav-btn" data-page="methodology">Methodology</button>
   <button class="nav-btn" data-page="context">Context</button>
+  <button class="nav-btn" data-page="glossary">Glossary</button>
 </nav>
 
 <main>
@@ -105,7 +106,17 @@
   </section>
 
   <section id="page-rankings" class="page">
-    <div class="card card-full">
+    
+  <div class="all-islands-toggle" style="padding:0.8rem 1.5rem 0; display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+    <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; color:var(--text-muted); font-size:0.9rem; user-select:none;">
+      <input type="checkbox" id="showAllIslands" style="width:16px; height:16px; accent-color:#2DD4BF; cursor:pointer;">
+      <span>Show all islands (including uninhabited)</span>
+    </label>
+    <span id="allIslandsNote" style="display:none; color:#FBBF24; font-size:0.82rem;">(i) Population and VI shown for uninhabited islands reflect land exposure only, not residents</span>
+    <span id="allIslandsUnavailable" style="display:none; color:#94A3B8; font-size:0.82rem;">(i) Run fetch_onemap_arcgis.py --all then npm run analyse to enable this view</span>
+  </div>
+
+<div class="card card-full">
       <h3>Island Vulnerability Rankings</h3>
       <div class="table-controls">
         <input id="atolFilter" type="text" placeholder="Search island name or atoll...">
@@ -274,6 +285,74 @@ node server.js            # Dashboard at http://localhost:3000</pre>
           </tbody>
         </table>
       </div>
+
+    </div>
+  </section>
+
+
+  <section id="page-glossary" class="page">
+    <div class="methodology-content">
+      <h2>Glossary</h2>
+      <p style="color:var(--text-muted);margin-bottom:1.5rem;">Definitions for all technical terms used in this dashboard and the accompanying dissertation.</p>
+
+      <h3>Model Performance Metrics</h3>
+      <table class="method-table">
+        <thead><tr><th>Term</th><th>Full Name</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td><strong>RMSE</strong></td><td>Root Mean Square Error</td><td>Average prediction error in centimetres. Lower is better. The Ensemble achieves 4.37 cm on the 85-month test set.</td></tr>
+          <tr><td><strong>MAE</strong></td><td>Mean Absolute Error</td><td>Average absolute error in centimetres. Less sensitive to large outliers than RMSE.</td></tr>
+          <tr><td><strong>R^2 / NSE</strong></td><td>R-squared / Nash-Sutcliffe Efficiency</td><td>How much of the observed variance the model explains. 1.0 = perfect, 0 = no better than predicting the mean, below 0 = worse than the mean baseline.</td></tr>
+          <tr><td><strong>MAPE</strong></td><td>Mean Absolute Percentage Error</td><td>Error as a percentage of the mean absolute anomaly (5.11 cm). Lower is better.</td></tr>
+          <tr><td><strong>Skill Score</strong></td><td>Skill Score vs persistence</td><td>Improvement over a naive forecast that simply predicts last month's observed value. Above 0 means better than persistence. The Ensemble scores 0.47 (47% better).</td></tr>
+          <tr><td><strong>F1 Score</strong></td><td>F1 Score</td><td>Accuracy of detecting months when sea level exceeds the +8 cm anomaly threshold. Balances precision (avoiding false alarms) and recall (catching real events). 1.0 = perfect, 0 = no skill.</td></tr>
+          <tr><td><strong>Precision</strong></td><td>Precision</td><td>Of all the months the model flagged as dangerous, what fraction actually were. High precision = few false alarms.</td></tr>
+          <tr><td><strong>Recall</strong></td><td>Recall</td><td>Of all the genuinely dangerous months, what fraction the model correctly identified. High recall = few missed events.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Machine Learning Models</h3>
+      <table class="method-table">
+        <thead><tr><th>Term</th><th>Full Name</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><strong>LSTM</strong></td><td>Long Short-Term Memory</td><td>A recurrent neural network architecture that can retain information over long time periods. Used here in univariate form with only sea level as input.</td></tr>
+          <tr><td><strong>Hybrid LSTM</strong></td><td>Hybrid LSTM (MSL + ONI + DMI)</td><td>LSTM model using three input features per timestep: sea level, ONI, and DMI. The climate indices provide a 3-6 month lead time signal.</td></tr>
+          <tr><td><strong>Ensemble</strong></td><td>Ensemble (0.6 LSTM + 0.4 Hybrid)</td><td>Weighted average of LSTM and Hybrid LSTM predictions. Best-performing model in this study (RMSE = 4.37 cm, F1 = 0.76).</td></tr>
+          <tr><td><strong>ARIMA</strong></td><td>AutoRegressive Integrated Moving Average</td><td>Classical statistical time series model. Used as a baseline. Poor performance here (RMSE = 11.90 cm) because it cannot capture non-linear inter-annual variability from ENSO and IOD.</td></tr>
+          <tr><td><strong>Prophet</strong></td><td>Prophet (additive decomposition)</td><td>Open-source forecasting model by Meta. Decomposes series into trend, seasonality, and residuals. Better than ARIMA but still limited on inter-annual signals (RMSE = 10.18 cm).</td></tr>
+          <tr><td><strong>RF</strong></td><td>Random Forest</td><td>Ensemble of decision trees. Implemented with 500 trees and lag features. Intermediate performance (RMSE = 5.61 cm).</td></tr>
+          <tr><td><strong>GB</strong></td><td>Gradient Boosting</td><td>Sequential ensemble of shallow trees. Intermediate performance (RMSE = 5.98 cm).</td></tr>
+          <tr><td><strong>XGB</strong></td><td>XGBoost</td><td>Optimised gradient boosting implementation. Similar to GB (RMSE = 5.99 cm).</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Climate and Oceanographic Terms</h3>
+      <table class="method-table">
+        <thead><tr><th>Term</th><th>Full Name</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ONI</strong></td><td>Oceanic Nino Index</td><td>Monthly index measuring El Nino and La Nina strength in the equatorial Pacific. Affects Indian Ocean sea levels via atmospheric teleconnections.</td></tr>
+          <tr><td><strong>DMI</strong></td><td>Dipole Mode Index</td><td>Monthly index measuring the Indian Ocean Dipole. A positive IOD event in 2019-2020 (DMI peak = 0.964 deg C, second strongest on record) produced the largest sea level anomalies in the 85-month test period.</td></tr>
+          <tr><td><strong>IOD</strong></td><td>Indian Ocean Dipole</td><td>A coupled ocean-atmosphere pattern in the Indian Ocean. Positive IOD events drive sea level rise across the central and northern Indian Ocean via coastal Kelvin wave propagation.</td></tr>
+          <tr><td><strong>ENSO</strong></td><td>El Nino-Southern Oscillation</td><td>The dominant Pacific climate mode. Affects Indian Ocean sea levels and is captured by the ONI index used in the Hybrid LSTM.</td></tr>
+          <tr><td><strong>MSL</strong></td><td>Mean Sea Level</td><td>The average level of the ocean surface, used as the baseline for sea level rise measurements.</td></tr>
+          <tr><td><strong>SLR</strong></td><td>Sea Level Rise</td><td>The increase in mean sea level over time due to ocean thermal expansion and ice melt.</td></tr>
+          <tr><td><strong>SSP</strong></td><td>Shared Socioeconomic Pathway</td><td>IPCC AR6 climate scenarios. SSP1-2.6 assumes strong emissions cuts; SSP5-8.5 assumes continued high emissions and projects up to +1.0m by 2100.</td></tr>
+          <tr><td><strong>IPCC AR6</strong></td><td>Sixth Assessment Report</td><td>The authoritative international scientific assessment of climate change, published 2021 by the Intergovernmental Panel on Climate Change.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Data and Methods</h3>
+      <table class="method-table">
+        <thead><tr><th>Term</th><th>Full Name</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><strong>VI</strong></td><td>Vulnerability Index</td><td>Composite score (0 to 1) for each island: VI = 0.5 x land flooded + 0.3 x normalised population + 0.2 x (1/island area). Higher score = more vulnerable. All sub-indicators normalised to [0,1] before weighting.</td></tr>
+          <tr><td><strong>GIS</strong></td><td>Geographic Information System</td><td>Tools and methods for spatial data analysis. Used here for flood inundation mapping of all 181 inhabited islands.</td></tr>
+          <tr><td><strong>Bathtub model</strong></td><td>Bathtub inundation model</td><td>Simple flood model that classifies all land below a sea level threshold as permanently inundated. Standard approach for national-scale screening where LiDAR data is unavailable.</td></tr>
+          <tr><td><strong>SRTM</strong></td><td>Shuttle Radar Topography Mission</td><td>NASA satellite elevation dataset at 30m resolution. Used to estimate island elevation in the absence of national LiDAR coverage for the Maldives.</td></tr>
+          <tr><td><strong>OneMap</strong></td><td>OneMap Maldives</td><td>The official national mapping platform of the Maldives government. Provides island boundary polygons, names, and atoll classification via an ArcGIS FeatureServer API.</td></tr>
+          <tr><td><strong>UHSLC</strong></td><td>University of Hawaii Sea Level Center</td><td>Maintains the 38-year tide gauge record at Male, Maldives (Station 108) used to train and test all ML models in this study.</td></tr>
+          <tr><td><strong>ArcGIS</strong></td><td>ArcGIS JavaScript API</td><td>Esri mapping platform used to display real OneMap island boundaries, flood bubble overlays, and reef/lagoon layers in the dashboard map.</td></tr>
+        </tbody>
+      </table>
 
     </div>
   </section>
