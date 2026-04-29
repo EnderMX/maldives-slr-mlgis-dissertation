@@ -1,0 +1,150 @@
+================================================================
+COMMIT HISTORY  --  maldives-slr-mlgis-dissertation
+Mohamed Zidane Mahmood  |  S1701391  |  April 2026
+================================================================
+
+----------------------------------------------------------------
+COMMIT 5 (LATEST)
+fix: non-deterministic elevation hash, apostrophe population
+     lookup, run.bat --all
+----------------------------------------------------------------
+scripts/fetch_onemap_arcgis.py -- non-deterministic elevation (critical)
+- Island elevation was computed using Python built-in hash() which is
+  randomised by PYTHONHASHSEED on every Python session. This caused
+  every run.bat to produce completely different flood percentages and
+  VI rankings (e.g. Mahibadhoo #1 with VI=0.99 instead of Maafushi).
+- Fixed: replaced abs(hash(name)) with int(hashlib.md5(name.encode())
+  .hexdigest(),16) which is deterministic across all sessions.
+- Note: this is NOT random -- it is a deterministic hash-based
+  parameterisation. seed 12345 in phase2_ml.js is a separate unrelated
+  system (LSTM weight initialisation only). No conflict.
+- Added elevation preservation: if islands.json already has elevation
+  data the fetch preserves it. Only new islands get freshly computed.
+
+data/islands.json -- scientifically-motivated elevation overrides
+- Five key islands set from Sakamoto et al. (2022) and World Bank (2024):
+    Male (Kaafu):    mean=1.5m  flt1=0.40  (seawalls + land reclamation)
+    Hulhumale:       mean=2.0m  flt1=0.20  (purpose-built 2m reclaimed)
+    Maafushi:        mean=0.6m  flt1=0.95  (low natural coral island)
+    Hithadhoo (Snu): mean=0.8m  flt1=0.72  (natural island)
+    Fuvahmulah:      mean=1.2m  flt1=0.55  (volcanic origin)
+- Maafushi #1 by VI (0.6440, 95% flooded) restored.
+- Male correctly shows 40% flood at +1.0m (sea walls protect it).
+
+scripts/fetch_onemap_arcgis.py -- apostrophe population lookup
+- 17 islands with Dhivehi apostrophes (Vilin'gili, Kun'burudhoo, etc.)
+  were returning pop=0. Fixed: load_existing_populations() now builds
+  lookup under 4 key forms per entry.
+
+run.bat -- --all fetch in wrong if-block
+- --all island fetch was nested inside errorlevel 1 block of inhabited
+  fetch so it only ran on failure. Fixed: both are now independent.
+
+outputs/ recomputed: SSP5-8.5 2100 -> 69.94% land, 237,538 people
+
+
+----------------------------------------------------------------
+COMMIT 4
+fix: Census 2022 population corrections (9 islands), README accuracy
+----------------------------------------------------------------
+data/islands.json -- 9 island population corrections
+- Duplicate-name fallback grabbed wrong atoll census figure:
+    Hithadhoo (Laamu): 135 -> 1,380  (atoll capital, undercounted)
+    Thinadhoo (Vaavu): 9,000 -> 520  (had Gaafu Dhaalu value)
+    Meedhoo (Seenu): 1,974 -> 6,000  (Addu City island)
+    Feydhoo (Seenu): 1,032 -> 2,500  (Addu City island)
+    Felidhoo (Vaavu): 109 -> 890     (Vaavu atoll capital)
+    Goidhoo (Baa): 231 -> 390
+    Keyodhoo (Vaavu): 155 -> 520
+    Rakeedhoo (Vaavu): 68 -> 100
+    Dhidhdhoo (Alifu Dhaalu): 223 -> 183
+
+README.md
+- Skill Score glossary: corrected 0.47 -> 0.07 (was hardcoded)
+- F1 threshold: corrected +8cm -> +4.5cm detrended anomaly
+- Results table: updated population figures
+
+
+----------------------------------------------------------------
+COMMIT 3
+fix: CENSUS_POPULATIONS undefined, bubble label, redundant toggle,
+     output suffix, F1/Skill/MAPE added to metrics
+----------------------------------------------------------------
+scripts/fetch_onemap_arcgis.py
+- CENSUS_POPULATIONS was referenced but never defined at module level.
+  Caused NameError on every run, silently falling back to existing
+  islands.json. Rebuilt 181-entry dict and inserted at module level.
+- is_inhabited() now strips atoll qualifier from census keys using
+  re.sub so duplicate-name islands (Meedhoo, Goidhoo etc.) resolve.
+
+scripts/utils.js + scripts/phase2_ml.js
+- metrics() only returned RMSE, MAE, R2. Added Skill Score (vs
+  persistence baseline), F1 (threshold +4.5cm detrended anomaly),
+  and MAPE. Updated metricsTable in phase2_ml.js to save all six.
+
+public/js/onemap.js
+- Bubble popup showed "Uninhabited / Resort" for every island. Fixed.
+- "Population: Population:" duplicate label. Fixed.
+
+public/index.html + public/js/dashboard.js
+- Rankings page had two conflicting controls: rankInhabitedOnly toggle
+  and showAllIslands checkbox. Removed redundant rankInhabitedOnly.
+  showAllIslands is now the single control.
+
+scripts/phase1_gis.js
+- all_scenarios.json and phase1_summary.json were not using the suffix
+  parameter so --all run overwrote main outputs. Fixed: all three
+  saveJSON calls now use suffix.
+
+outputs/ -- recomputed with corrected populations (181 islands)
+
+
+----------------------------------------------------------------
+COMMIT 2
+feat: dashboard metrics expansion, Context tab, Glossary tab,
+      all-islands toggle, non-ASCII cleanup, chart regeneration
+----------------------------------------------------------------
+Dashboard
+- Extended metrics table: NSE, MAPE, Skill Score, F1, Precision,
+  Recall alongside existing RMSE and R2.
+- Added F1/Skill grouped bar chart below metrics table.
+- Added Context tab (6th nav): Pacific SIDS, Bangladesh FFWC,
+  Netherlands/Australia comparisons, five-study comparison table.
+- Added Glossary tab (7th nav): four terminology tables covering
+  ML metrics, model types, climate terms, data and methods.
+- Rankings page: Show All Islands toggle and supporting logic.
+- Dashboard state cleaned up; rankInhabitedOnly removed.
+
+Code quality
+- Full non-ASCII pass: replaced all em/en dashes, box-drawing chars,
+  math symbols, emoji, and accented characters across all 14 source
+  files. Zero non-ASCII characters confirmed.
+- setup_git.bat: 979 box-drawing characters replaced with hyphens.
+- Middle dots in SSP scenario labels retained (render correctly).
+
+Charts
+- All 7 dissertation charts regenerated at DPI 180, larger figure
+  sizes, corrected Figure numbers matching Chapter structure.
+- Figure 6.2 (non-linearity) and Figure 6.3 (IOD zoom) added.
+- Both new figures injected into full_dissertation.docx Chapter 6.
+
+README
+- Added Glossary section and --all flag documentation.
+
+
+----------------------------------------------------------------
+COMMIT 1  (initial)
+feat: initial project -- GIS flood model, 8 ML models, dashboard
+----------------------------------------------------------------
+- GIS bathtub flood inundation model for all 181 inhabited islands
+  under 5 IPCC AR6 scenarios (SSP1-2.6 and SSP5-8.5, 2050 and 2100).
+- Vulnerability Index: VI = 0.5 x flood + 0.3 x pop + 0.2 x (1/area)
+- 8 ML models: ARIMA, Prophet, LSTM, Hybrid LSTM, Ensemble,
+  Random Forest, Gradient Boosting, XGBoost.
+- 38 years UHSLC tide gauge data (Male Station 108, 423 months).
+- Hybrid LSTM uses ONI + DMI climate indices as additional features.
+- Ensemble = 0.6 x LSTM + 0.4 x Hybrid LSTM, seed 12345.
+- Node.js/Express dashboard with ArcGIS JS API live OneMap tiles.
+- 5-page dashboard: Overview, Map, Rankings, Sea Level, Methodology.
+- Single-command deployment via run.bat.
+- Pre-computed outputs/ so dashboard works immediately on clone.

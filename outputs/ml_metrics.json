@@ -3,30 +3,55 @@
     "Model": "ARIMA",
     "RMSE_cm": 11.9045,
     "MAE_cm": 10.156,
-    "R2": -2.4438
+    "R2": -2.4438,
+    "MAPE": 206.7,
+    "Skill": -1.5331,
+    "F1": 0,
+    "Precision": 0,
+    "Recall": 0.0
   },
   {
     "Model": "Prophet",
     "RMSE_cm": 10.1795,
     "MAE_cm": 8.3697,
-    "R2": -1.5181
+    "R2": -1.5181,
+    "MAPE": 170.34,
+    "Skill": -1.1661,
+    "F1": 0,
+    "Precision": 0,
+    "Recall": 0.0
   },
   {
     "Model": "LSTM",
     "RMSE_cm": 4.5824,
     "MAE_cm": 3.6859,
-    "R2": 0.4897
+    "R2": 0.4897,
+    "MAPE": 75.02,
+    "Skill": 0.0249,
+    "F1": 0.5161,
+    "Precision": 0.8,
+    "Recall": 0.381
   },
   {
     "Model": "Hybrid LSTM",
     "RMSE_cm": 4.3781,
     "MAE_cm": 3.394,
-    "R2": 0.5342
+    "R2": 0.5342,
+    "MAPE": 69.07,
+    "Skill": 0.0684,
+    "F1": 0.6842,
+    "Precision": 0.7647,
+    "Recall": 0.619
   },
   {
     "Model": "Ensemble (LSTM+Hybrid)",
     "RMSE_cm": 4.3734,
     "MAE_cm": 3.4482,
-    "R2": 0.5352
+    "R2": 0.5352,
+    "MAPE": 70.18,
+    "Skill": 0.0694,
+    "F1": 0.5882,
+    "Precision": 0.7692,
+    "Recall": 0.4762
   }
 ]

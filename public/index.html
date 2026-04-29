@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maldives Sea Level Rise Dashboard | OneMap Integration</title>
+  <title>PROTEUS Dashboard | OneMap Integration</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -32,7 +32,7 @@
 
 <header>
   <div>
-    <h1>Maldives Sea Level Rise Dashboard</h1>
+    <h1>PROTEUS Dashboard</h1>
     <div class="header-sub">S1701391 &nbsp;·&nbsp; UFCF9Y-60-M &nbsp;·&nbsp; MSc Information Technology</div>
   </div>
   <div class="header-right">
@@ -91,7 +91,7 @@
         <label class="toggle-label">
           <input type="checkbox" id="inhabitedOnly" checked>
           <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          <span class="toggle-text">Inhabited only</span>
+          <span class="toggle-text">Inhabited islands</span>
         </label>
         <div class="map-info-text">Bubble size = area &nbsp;·&nbsp; Colour = % inundated &nbsp;·&nbsp; Scenario: <span id="mapScenarioLabel">SSP5-8.5 2100</span></div>
       </div>
@@ -125,11 +125,7 @@
           <option value="vi">Sort by Vulnerability Index</option>
           <option value="pct">Sort by % Land Inundated</option>
         </select>
-        <label class="toggle-label">
-          <input type="checkbox" id="rankInhabitedOnly" checked>
-          <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          <span class="toggle-text">Inhabited only</span>
-        </label>
+
       </div>
       <div class="table-wrap">
         <table id="rankTable">

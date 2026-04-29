@@ -224,7 +224,7 @@ function dateStr (date) {
   return date.toISOString().slice(0, 10);
 }
 
-function metrics (actual, predicted) {
+function metrics (actual, predicted, threshold = 4.5) {
   if (actual.length !== predicted.length) {
     const len = Math.min(actual.length, predicted.length);
     actual    = actual.slice(0, len);
@@ -232,6 +232,20 @@ function metrics (actual, predicted) {
   }
   const n    = actual.length;
   const mean = ss.mean(actual);
+  const meanAbs = ss.mean(actual.map(v => Math.abs(v)));
+
+  // Detrend: linear trend of the full passed series, applied at test positions
+  // startIndex allows the caller to pass the position offset (e.g. 338 for test set)
+  const xi = actual.map((_, i) => i);
+  const xMean = xi.reduce((s, v) => s + v, 0) / n;
+  const xVar  = xi.reduce((s, v) => s + (v - xMean) ** 2, 0) / n;
+  const yMean = actual.reduce((s, v) => s + v, 0) / n;
+  const cov   = xi.reduce((s, v, i) => s + (v - xMean) * (actual[i] - yMean), 0) / n;
+  const trendSlope = xVar > 0 ? cov / xVar : 0;
+  const trendLine  = xi.map(i => yMean + trendSlope * (i - xMean));
+  const anomaly_actual    = actual.map((v, i) => v - trendLine[i]);
+  const anomaly_predicted = predicted.map((v, i) => v - trendLine[i]);
+
   let sse = 0, sst = 0, sae = 0;
   for (let i = 0; i < n; i++) {
     const e = actual[i] - predicted[i];
@@ -239,10 +253,44 @@ function metrics (actual, predicted) {
     sst += (actual[i] - mean) ** 2;
     sae += Math.abs(e);
   }
+  const rmse = Math.sqrt(sse / n);
+
+  // Persistence baseline RMSE (predict last observed value)
+  let ssePers = 0;
+  for (let i = 1; i < n; i++) {
+    const e = actual[i] - actual[i - 1];
+    ssePers += e * e;
+  }
+  const rmsePers = Math.sqrt(ssePers / (n - 1));
+  const skill = Math.round((1 - rmse / (rmsePers || 1)) * 1e4) / 1e4;
+
+  // MAPE relative to mean absolute anomaly
+  const mape = meanAbs > 0
+    ? Math.round((sae / n / meanAbs * 100) * 1e2) / 1e2
+    : null;
+
+  // F1 for threshold exceedance detection
+  let tp = 0, fp = 0, fn = 0;
+  for (let i = 0; i < n; i++) {
+    const actualExceeds    = anomaly_actual[i]    > threshold;
+    const predictedExceeds = anomaly_predicted[i] > threshold;
+    if (actualExceeds  && predictedExceeds) tp++;
+    if (!actualExceeds && predictedExceeds) fp++;
+    if (actualExceeds  && !predictedExceeds) fn++;
+  }
+  const precision = tp + fp > 0 ? tp / (tp + fp) : 0;
+  const recall    = tp + fn > 0 ? tp / (tp + fn) : 0;
+  const f1 = precision + recall > 0
+    ? Math.round(2 * precision * recall / (precision + recall) * 1e4) / 1e4
+    : 0;
+
   return {
-    RMSE: Math.round(Math.sqrt(sse / n) * 1e4) / 1e4,
-    MAE:  Math.round((sae / n) * 1e4) / 1e4,
-    R2:   Math.round((1 - sse / (sst || 1)) * 1e4) / 1e4,
+    RMSE:  Math.round(rmse * 1e4) / 1e4,
+    MAE:   Math.round((sae / n) * 1e4) / 1e4,
+    R2:    Math.round((1 - sse / (sst || 1)) * 1e4) / 1e4,
+    MAPE:  mape,
+    Skill: skill,
+    F1:    f1,
   };
 }
 

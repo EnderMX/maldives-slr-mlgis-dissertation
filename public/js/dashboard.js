@@ -3,8 +3,8 @@
 const state = {
   scenario: 'SSP5-8.5_2100',
   allScenarios: null,
-  allScenariosAll: null,   // all islands including uninhabited (if available)
-  showAllIslands: false,   // toggle state for rankings page
+  allScenariosAll: null,
+  showAllIslands: false,
   summary: null,
   metrics: null,
   projections: null,
@@ -12,7 +12,6 @@ const state = {
   testFc: null,
   charts: {},
   mapInhabitedOnly: true,
-  rankInhabitedOnly: true,
 };
 
 const SCENARIO_LABELS = {
@@ -117,10 +116,9 @@ function setupUI() {
     });
   }
 
-  const rankInhabitedToggle = document.getElementById('rankInhabitedOnly');
+  const rankInhabitedToggle = null; // removed - showAllIslands toggle handles this
   if (rankInhabitedToggle) {
     rankInhabitedToggle.addEventListener('change', () => {
-      state.rankInhabitedOnly = rankInhabitedToggle.checked;
       renderRankings();
     });
   }
@@ -359,8 +357,8 @@ function renderRankings() {
 
   let data = [...dataSource[state.scenario]];
 
-  // Inhabited-only filter (only applies when using main dataset)
-  if (!wantAll && state.rankInhabitedOnly) {
+  // Filter to inhabited islands when not showing all islands
+  if (!wantAll) {
     data = data.filter(r => r.population > 0);
   }
 

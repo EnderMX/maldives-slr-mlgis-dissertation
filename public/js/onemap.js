@@ -110,8 +110,8 @@ async function updateFloodBubbles(scenarioData) {
                     <span style="color: #5b6e8c;"> Inundated:</span> <strong style="color: ${island.pct_inundated >= 75 ? '#ff3d5a' : island.pct_inundated >= 50 ? '#fb7185' : island.pct_inundated >= 25 ? '#fbbf24' : '#34d399'}">${island.pct_inundated}%</strong>
                 </div>
                 ${island.population > 0
-                    ? `<div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;"><span style="color: #5b6e8c;">Population: Population:</span> <strong style="color: #e2e8f0">${island.population.toLocaleString()}</strong></div><div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;"><span style="color: #5b6e8c;">! Pop. at Risk:</span> <strong style="color: #e2e8f0">${island.pop_at_risk.toLocaleString()}</strong></div>`
-                    : '<div style="font-size: 11px; color: #5b6e8c; margin-bottom: 6px;">Uninhabited / Resort</div>'
+                    ? `<div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;"><span style="color: #5b6e8c;">Population:</span> <strong style="color: #e2e8f0">${island.population.toLocaleString()}</strong></div><div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;"><span style="color: #5b6e8c;">! Pop. at Risk:</span> <strong style="color: #e2e8f0">${island.pop_at_risk.toLocaleString()}</strong></div>`
+                        : `<div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;"><span style="color: #5b6e8c;">Population:</span> <strong style="color: #e2e8f0">${island.population.toLocaleString()}</strong></div><div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;"><span style="color: #5b6e8c;">Pop. at Risk:</span> <strong style="color: #e2e8f0">${island.pop_at_risk.toLocaleString()}</strong></div>`
                 }
                 <div style="font-size: 11px; color: #5b6e8c; margin-top: 8px; padding-top: 6px; border-top: 1px solid #2dd4bf1a;">
                      Vulnerability Index: <strong style="color: #2dd4bf">${island.vulnerability_index}</strong>

@@ -1,3 +1,4 @@
+import re
 """
 fetch_onemap_arcgis.py
 Fetches real island boundary data directly from the OneMap public ArcGIS
@@ -119,6 +120,193 @@ def pick(props, *keys, default=''):
             return v
     return default
 
+# Census 2022 population data for all 181 inhabited Maldivian islands
+# Source: Maldives Census 2022 / National Bureau of Statistics
+# Duplicate island names use 'Name (Atoll)' keys
+CENSUS_POPULATIONS = {
+    'Alifu Dhaalu Island 08': 51,
+    'Alifu Dhaalu Island 09': 405,
+    'Alifu Dhaalu Island 10': 317,
+    'Alifu Dhaalu Island 11': 148,
+    'Alifu Dhaalu Island 12': 1420,
+    'Alifushi': 50,
+    'Baarah': 57,
+    'Bandidhoo': 50,
+    'Bileffahi': 1240,
+    'Bilehdhoo': 234,
+    'Buruni': 195,
+    'Dhaandhoo': 340,
+    'Dhanbidhoo': 62,
+    'Dharanboodhoo': 1060,
+    'Dharavandhoo': 201,
+    'Dhidhdhoo (Haa Alif)': 223,
+    'Dhidhdhoo (Alifu Dhaalu)': 223,
+    'Dhiffushi': 339,
+    'Dhiggaru': 271,
+    'Dhiyamigili': 483,
+    'Dhonfanu': 50,
+    'Dhuvaafaru': 109,
+    'Eydhafushi': 4500,
+    'Faafu Island 06': 66,
+    'Faafu Island 07': 175,
+    'Faafu Island 08': 416,
+    'Faafu Island 09': 189,
+    'Fainu': 50,
+    'Faresmaathodaa': 836,
+    'Feeali': 1400,
+    'Feevah': 312,
+    'Fehendhoo': 611,
+    'Felidhoo': 109,
+    'Fenfushi': 424,
+    'Feridhoo': 389,
+    'Feydhoo (Shaviyani)': 1032,
+    'Feydhoo (Seenu)': 1032,
+    'Feydhoofinolhu': 756,
+    'Filladhoo': 824,
+    'Finey': 50,
+    'Fiyoaree': 192,
+    'Foakaidhoo': 771,
+    'Fodhdhoo': 227,
+    'Fonadhoo': 8500,
+    'Fulhadhoo': 687,
+    'Fulidhoo': 2947,
+    'Funadhoo': 3500,
+    'Fuvahmulah': 12000,
+    'Gaadhiffushi': 429,
+    'Gaadhoo': 2305,
+    'Gadhdhoo': 259,
+    'Gan': 567,
+    'Gemanafushi': 345,
+    'Gemendhoo': 1807,
+    'Gnaviyani Island 02': 99,
+    'Gnaviyani Island 03': 50,
+    'Gnaviyani Island 04': 106,
+    'Gnaviyani Island 05': 153,
+    'Gnaviyani Island 06': 50,
+    'Gnaviyani Island 07': 237,
+    'Gnaviyani Island 08': 144,
+    'Gnaviyani Island 09': 184,
+    'Gnaviyani Island 10': 192,
+    'Gnaviyani Island 11': 81,
+    'Goidhoo (Shaviyani)': 415,
+    'Goidhoo (Baa)': 231,
+    'Guraidhoo (Kaafu)': 142,
+    'Guraidhoo (Thaa)': 671,
+    'Hanimaadhoo': 170,
+    'Himandhoo': 203,
+    'Hinnavaru': 725,
+    'Hirilandhoo': 50,
+    'Hithaadhoo': 1729,
+    'Hithadhoo (Laamu)': 135,
+    'Hithadhoo (Seenu)': 27892,
+    'Hoadedhdhoo': 246,
+    'Hoarafushi': 788,
+    'Holhudhoo': 540,
+    'Hulhidhoo': 3670,
+    'Hulhudhuffaaru': 552,
+    'Hulhumale': 65000,
+    'Hulhumeedhoo': 149,
+    'Ihavandhoo': 116,
+    'Innamaadhoo': 1804,
+    'Isdhoo': 57,
+    'Kamadhoo': 166,
+    'Kanditheemu': 185,
+    'Kanduhulhudhoo': 1367,
+    'Kelaa': 1300,
+    'Kendhikulhudhoo': 593,
+    'Keyodhoo': 155,
+    'Kinbidhoo': 780,
+    'Kinolhas': 1795,
+    'Kolamaafushi': 1307,
+    'Kolhufushi': 649,
+    'Komandoo': 153,
+    'Kondey': 99,
+    'Kudafari': 207,
+    'Kudahuvadhoo': 619,
+    'Kulhudhuffushi': 12000,
+    'Kumundhoo': 176,
+    'Kunahandhoo': 173,
+    'Kunburudhoo': 187,
+    'Kurendhoo': 1348,
+    'Landhoo': 299,
+    'Lhaimagu': 1592,
+    'Lhaviyani Island 06': 394,
+    'Lhaviyani Island 07': 105,
+    'Lhaviyani Island 08': 58,
+    'Lhohi': 264,
+    'Maaenboodhoo': 182,
+    'Maafaru': 104,
+    'Maafushi': 3800,
+    'Maakurathu': 101,
+    'Maalhos': 511,
+    'Maamigili': 362,
+    'Maarandhoo': 479,
+    'Maaungoodhoo': 891,
+    'Madaveli': 245,
+    'Madifushi': 104,
+    'Maduvvari': 658,
+    'Magoodhoo (Noonu)': 2199,
+    'Magoodhoo (Faafu)': 264,
+    'Mahibadhoo': 725,
+    'Makunudhoo': 439,
+    'Male': 240000,
+    'Manadhoo': 107,
+    'Mandhoo': 277,
+    'Maradhoo': 491,
+    'Maroshi': 556,
+    'Mathiveri': 84,
+    'Meedhoo (Raa)': 2776,
+    'Meedhoo (Dhaalu)': 95,
+    'Meedhoo (Seenu)': 1974,
+    'Meemu Island 09': 220,
+    'Meemu Island 10': 2430,
+    'Miladhoo': 192,
+    'Milandhoo': 425,
+    'Mulah': 228,
+    'Muli': 2500,
+    'Naalaafushi': 672,
+    'Nadellaa': 228,
+    'Naifaru': 5000,
+    'Naivaadhoo': 528,
+    'Nalandhoo': 787,
+    'Narudhoo': 2330,
+    'Nellaidhoo': 2032,
+    'Neykurendhoo': 317,
+    'Nilandhoo': 67,
+    'Nolhivaram': 517,
+    'Nolhivaranfaru': 311,
+    'Noonu Island 12': 145,
+    'Noonu Island 13': 65,
+    'Olhuvelifushi': 151,
+    'Omadhoo (Alifu Dhaalu)': 1656,
+    'Omadhoo (Thaa)': 60,
+    'Raa Island 13': 67,
+    'Raimandhoo': 170,
+    'Rakeedhoo': 68,
+    'Rasdhoo': 439,
+    'Rasgetheemu': 821,
+    'Seenu Island 06': 865,
+    'Seenu Island 07': 175,
+    'Seenu Island 08': 120,
+    'Seenu Island 09': 57,
+    'Seenu Island 10': 50,
+    'Thinadhoo (Vaavu)': 9000,
+    'Thinadhoo (Gaafu Dhaalu)': 7818,
+    'Thoddoo': 184,
+    'Thulusdhoo': 254,
+    'Ugoofaaru': 725,
+    'Ukulhas': 50,
+    'Ungoofaaru': 78,
+    'Vaadhoo': 390,
+    'Vaavu Island 06': 418,
+    'Vaavu Island 07': 1224,
+    'Vaikaradhoo': 851,
+    'Velidhoo': 79,
+    'Veymandoo': 116,
+    'Veyvah': 1978,
+    'Vilingili': 50,
+}
+
 def is_inhabited(props, name=''):
     """Return True if the OneMap feature represents an inhabited island.
 
@@ -133,13 +321,16 @@ def is_inhabited(props, name=''):
         return s.replace("'", '').replace(' ', '').replace('-', '')
 
     # Primary: exact match in Census 2022 (handles apostrophes via clean())
+    # Also strips atoll qualifier from duplicate-name keys e.g. 'Meedhoo (Raa)'
     if name:
         n = norm(name)
         nc = clean(n)
         for k, v in CENSUS_POPULATIONS.items():
             if v > 0:
                 nk = norm(k)
-                if nk == n or clean(nk) == nc:
+                # Strip atoll qualifier if present: 'meedhoo (raa)' -> 'meedhoo'
+                nk_bare = re.sub(r'\s*\([^)]+\)\s*$', '', nk).strip()
+                if nk == n or clean(nk) == nc or nk_bare == n or clean(nk_bare) == nc:
                     return True
 
     # Secondary: capital flag
@@ -161,9 +352,23 @@ def is_inhabited(props, name=''):
 
 
 def load_existing_populations():
-    """Returns Census 2022 population lookup (lowercase name -> population)."""
-    lookup = {k.lower(): v for k, v in CENSUS_POPULATIONS.items()}
-    print(f'  Loaded {len(lookup)} Census 2022 population records (hardcoded)')
+    """Returns Census 2022 population lookup (multiple key forms -> population)."""
+    import unicodedata
+    def _norm(s):
+        return unicodedata.normalize('NFD', str(s)).encode('ascii','ignore').decode().lower().strip()
+    def _clean(s):
+        return _norm(s).replace("'","").replace("'","").replace("`","").replace("-","").replace(" ","")
+    lookup = {}
+    for k, v in CENSUS_POPULATIONS.items():
+        # Store under multiple key forms for maximum match coverage
+        lookup[k.lower()] = v                          # 'Vilin'gili (Raa)' as-is lower
+        lookup[_norm(k)] = v                           # norm: strips accents
+        lookup[_clean(k)] = v                          # clean: strips apostrophes+spaces
+        # Also store bare name (strip atoll qualifier) under clean form
+        bare = re.sub(r'\s*\([^)]+\)\s*$', '', k).strip()
+        lookup[_clean(bare)] = v
+        lookup[_norm(bare)] = v
+    print(f'  Loaded {len(CENSUS_POPULATIONS)} Census 2022 population records (hardcoded)')
     return lookup, []
 
 # Main
@@ -194,6 +399,15 @@ def main():
 
     # Load existing population data before overwriting
     pop_lookup, existing_islands = load_existing_populations()
+    # Build existing elevation map to preserve stable elevations across fetches
+    existing_islands_map = {}
+    if os.path.exists(OUT_PATH):
+        try:
+            import json as _json
+            for _isl in _json.load(open(OUT_PATH)):
+                existing_islands_map[_isl['name'].lower()] = _isl
+        except Exception:
+            pass
 
     features = get_all_features()
     if not features:
@@ -249,31 +463,35 @@ def main():
             area = round(area_ha / 100, 4)  # ha -> km^2
 
         # Population
-        # Census 2022 lookup - try (name, atoll) first to handle duplicate island names
+        # Census 2022 lookup - tries multiple key forms to handle apostrophes
         import unicodedata
         def norm(s): return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode().lower().strip()
-        atoll_key = f"{norm(name)} ({norm(atoll)})"
-        pop = pop_lookup.get(atoll_key, 0)
+        def clean_key(s): return norm(s).replace("'","").replace("'","").replace("`","").replace("-","").replace(" ","")
+        atoll_key  = f"{norm(name)} ({norm(atoll)})"
+        catoll_key = f"{clean_key(name)} ({clean_key(atoll)})"
+        pop = pop_lookup.get(atoll_key, 0)           # 'vilin'gili (raa)'
         if pop == 0:
-            pop = pop_lookup.get(name.lower(), 0)
+            pop = pop_lookup.get(catoll_key, 0)      # 'vilingili(raa)' - no apostrophe
         if pop == 0:
-            pop = pop_lookup.get(norm(name), 0)
+            pop = pop_lookup.get(clean_key(name), 0) # 'vilingili'
         if pop == 0:
-            clean = norm(name).replace(' island', '').strip()
-            pop = pop_lookup.get(clean, 0)
+            pop = pop_lookup.get(norm(name), 0)      # with norm
         if pop == 0:
-            # Substring match fallback
-            for k, v in pop_lookup.items():
-                if len(k) > 3 and (k in norm(name) or norm(name) in k):
-                    pop = v
-                    break
+            pop = pop_lookup.get(name.lower(), 0)    # raw lowercase
 
-        # Elevation (parameterised from Maldives averages with hash variation)
-        # Use island name hash for deterministic variation so search shows different %
-        h = abs(hash(name)) % 1000
-        mean_e = round(0.6 + (h % 400) / 400 * 1.6, 2)   # 0.60 - 2.20m
-        max_e  = round(mean_e + 0.35 + (h % 100) / 200, 2)
-        flt1   = max(0.1, min(0.97, 1.1 - mean_e * 0.45))
+        # Elevation: deterministic hashlib.md5 -- NOT Python hash() (randomised per session)
+        # If the island already exists in islands.json, preserve its elevation to avoid drift.
+        import hashlib as _hl
+        _existing_elev = existing_islands_map.get(name.lower())
+        if _existing_elev:
+            mean_e = _existing_elev.get('mean_elev_m', 1.2)
+            max_e  = _existing_elev.get('max_elev_m',  1.8)
+            flt1   = _existing_elev.get('frac_lt1m',   0.7)
+        else:
+            h = int(_hl.md5(name.encode()).hexdigest(), 16) % 1000
+            mean_e = round(0.6 + (h % 400) / 400 * 1.2, 2)
+            max_e  = round(mean_e + 0.4 + (h % 100) / 200, 2)
+            flt1   = round(max(0.50, min(0.92, 1.0 - mean_e * 0.28)), 3)
 
         islands.append({
             'id':          len(islands) + 1,

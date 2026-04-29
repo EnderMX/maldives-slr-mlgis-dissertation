@@ -1,10 +1,10 @@
 @echo off
 setlocal enabledelayedexpansion
-title Maldives SLR Analysis Pipeline
+title PROTEUS -- Maldives SLR Analysis Pipeline
 
 echo.
 echo ============================================================
-echo   Maldives Sea Level Rise Analysis Pipeline
+echo   PROTEUS -- Maldives Sea Level Rise Analysis Pipeline
 echo   Mohamed Zidane Mahmood ^| S1701391 ^| April 2026
 echo ============================================================
 echo.
@@ -115,25 +115,24 @@ if exist "data\rq108a.dat" (
     echo   and save rq108a.dat and fd108a.dat into data\
 )
 
-:: OneMap, fetch real GPS island coordinates from public ArcGIS FeatureServer
+:: OneMap: fetch inhabited island coordinates
 echo   Fetching real island coordinates from OneMap ArcGIS...
-echo   (requires internet, ~30-60 seconds ) skip with Ctrl+C if offline)
+echo   (requires internet, ~30-60 seconds - skip with Ctrl+C if offline)
 !PYTHON! scripts\fetch_onemap_arcgis.py
 if errorlevel 1 (
-    echo   WARNING: OneMap fetch failed. Using existing islands.json coordinates.
-
-:: OneMap: fetch all islands including uninhabited (for extended rankings view)
-echo   Fetching all island features from OneMap ArcGIS...
-
-!PYTHON! scripts\fetch_onemap_arcgis.py --all
-
-    echo   WARNING: All-islands fetch failed. Extended rankings will be unavailable.
-
-    echo   All island coordinates updated.
-    echo   Map will show atoll-level estimates instead of exact GPS positions.
+    echo   WARNING: Inhabited islands fetch failed. Using existing islands.json.
 ) else (
-    echo   OneMap coordinates updated successfully.
+    echo   Inhabited island coordinates updated successfully.
     set REAL_DATA=1
+)
+
+:: OneMap: fetch all islands including uninhabited (for extended rankings toggle)
+echo   Fetching all island features from OneMap ArcGIS...
+!PYTHON! scripts\fetch_onemap_arcgis.py --all
+if errorlevel 1 (
+    echo   WARNING: All-islands fetch failed. Extended rankings will be unavailable.
+) else (
+    echo   All-islands coordinates updated successfully.
 )
 
 echo.

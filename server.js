@@ -38,6 +38,6 @@ app.get('/api', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`\n Maldives SLR Dashboard running at http://localhost:${PORT}`);
+  console.log(`\n PROTEUS | Maldives Sea Level Rise Platform running at http://localhost:${PORT}`);
   console.log('  Press Ctrl+C to stop.\n');
 });

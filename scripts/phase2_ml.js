@@ -525,6 +525,9 @@ function runPhase2 (seaLevelData, climateIndices = null) {
     RMSE_cm: r.metrics.RMSE,
     MAE_cm:  r.metrics.MAE,
     R2:      r.metrics.R2,
+    MAPE:    r.metrics.MAPE,
+    Skill:   r.metrics.Skill,
+    F1:      r.metrics.F1,
   }));
   console.log('\n  -- Model Performance --');
   metricsTable.forEach(r => console.log(`  ${r.Model.padEnd(14)} | RMSE=${r.RMSE_cm}  MAE=${r.MAE_cm}  R^2=${r.R2}`));

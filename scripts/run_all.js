@@ -76,12 +76,23 @@ async function main () {
   saveJSON('summary.json', summary);
 
   // Print key results
-  console.log('\n-- Results Summary --------------------------------------');
+  console.log('\n-- Results Summary (land % = area-based, pop = Census 2022) ----------');
+  console.log('  Note: SSP1-2.6_2100 and SSP5-8.5_2050 both use +0.5m SLR -- identical by design');
   for (const [scen, s] of Object.entries(phase1Summary)) {
     console.log(`  ${scen.padEnd(18)} | ${s.pct_land_inundated}% land | ${s.pop_at_risk.toLocaleString()} people at risk`);
   }
-  console.log('\n  Best ML model:', metrics.sort((a,b) => a.RMSE_cm - b.RMSE_cm)[0].Model,
-    `(RMSE=${metrics[0].RMSE_cm}cm, R^2=${metrics[0].R2})`);
+  // Full metrics table
+  const sorted = [...metrics].sort((a,b) => a.RMSE_cm - b.RMSE_cm);
+  console.log('\n-- ML Model Performance (all metrics) -------------------');
+  console.log('  Model                      RMSE(cm)  MAE(cm)  R2/NSE   F1    Skill');
+  console.log('  ' + '-'.repeat(66));
+  sorted.forEach(m => {
+    const pad = (v, n) => String(v===undefined?'N/A':v).padEnd(n);
+    const best = m.Model === sorted[0].Model ? ' <- BEST' : '';
+    console.log(`  ${pad(m.Model,26)} ${pad(m.RMSE_cm,9)} ${pad(m.MAE_cm,8)} ${pad(m.R2,8)} ${pad(m.f1||'N/A',5)} ${pad(m.skill_score||'N/A',5)}${best}`);
+  });
+  console.log('\n  Best ML model:', sorted[0].Model,
+    `(RMSE=${sorted[0].RMSE_cm}cm, R^2=${sorted[0].R2})`);
 
   console.log('\n-- Done -------------------------------------------------');
   console.log('  Outputs in ./outputs/');

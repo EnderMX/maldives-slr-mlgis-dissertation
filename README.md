@@ -1,4 +1,5 @@
-# Maldives Sea Level Rise Dashboard
+# PROTEUS
+### Predictive Risk and Ocean Trend Evaluation for Uninhabited and Settled islands
 
 MSc Dissertation, Mohamed Zidane Mahmood (S1701391)  
 Villa College / University of the West of England, Bristol  
@@ -8,9 +9,9 @@ Module: UFCF9Y-60-M | April 2026
 
 ## What this is
 
-This is the code and data for my MSc dissertation. The project looks at how much of the Maldives would be flooded under different sea level rise scenarios, and builds machine learning models to forecast future sea levels using real tide gauge data. Everything is pulled together in an interactive dashboard built with Node.js.
+PROTEUS is a machine learning and GIS platform for predicting sea level rise impact across all 181 inhabited Maldivian islands. Named after the ancient Greek sea deity who personified elusive sea change, the platform makes that change visible and quantifiable for climate adaptation planning.
 
-The three main parts are:
+The three components are:
 
 - GIS flood modelling across all 181 inhabited islands under 5 IPCC scenarios
 - 8 machine learning models trained on 38 years of real tide gauge data from Male
@@ -36,8 +37,8 @@ The three main parts are:
 **Flood exposure under worst case (SSP5-8.5 2100):**
 
 - 70.6% of national land area flooded
-- 294,718 people at risk
-- With storm surge: 89.9% of land, 465,223 people
+- 291,604 people at risk
+- With storm surge: 89.9% of land, 462,373 people
 
 ---
 
@@ -124,7 +125,7 @@ setup_git.bat             Pushes the repo to GitHub
 
 ## Citation
 
-Mahmood, M.Z. (2026) *Predicting Sea Level Rise Impact on Maldivian Islands: A Machine Learning Approach for Climate Adaptation Planning.* MSc Dissertation, Villa College / University of the West of England, Bristol. UFCF9Y-60-M.
+Mahmood, M.Z. (2026) *PROTEUS: Predictive Risk and Ocean Trend Evaluation for Uninhabited and Settled islands. Predicting Sea Level Rise Impact on Maldivian Islands: A Machine Learning Approach for Climate Adaptation Planning.* MSc Dissertation, Villa College / University of the West of England, Bristol. UFCF9Y-60-M.
 
 ---
 
@@ -199,8 +200,8 @@ This step runs automatically when you use `run.bat`.
 | MAE | Mean Absolute Error | Average absolute error in centimetres. Less sensitive to large outliers than RMSE. |
 | R2 / NSE | R-squared / Nash-Sutcliffe Efficiency | How much of the observed variance the model explains. 1.0 = perfect, 0 = no better than predicting the mean, below 0 = worse than the mean. |
 | MAPE | Mean Absolute Percentage Error | Error as a percentage of the mean absolute anomaly (5.11 cm). Lower is better. |
-| Skill Score | Skill Score vs persistence | Improvement over a naive forecast that just predicts last month's value. Above 0 = better than persistence. The Ensemble scores 0.47. |
-| F1 Score | F1 Score | Accuracy of detecting months when sea level exceeds the +8 cm anomaly threshold (flood warning task). Balances precision and recall. 1.0 = perfect. |
+| Skill Score | Skill Score vs persistence | Improvement over a naive forecast that just predicts last month's value. Above 0 = better than persistence. The Ensemble scores 0.07 (modest, because the rising tide trend during the test period also benefits the naive persistence baseline). |
+| F1 Score | F1 Score | Accuracy of detecting months when sea level exceeds the +4.5 cm detrended anomaly threshold (flood warning task). Balances precision and recall. 1.0 = perfect. |
 | LSTM | Long Short-Term Memory | A type of recurrent neural network that can remember patterns over long time periods. Used here for sea level forecasting. |
 | Hybrid LSTM | Hybrid LSTM | LSTM model that uses sea level data plus climate indices (ONI and DMI) as inputs. |
 | Ensemble | Ensemble model | Weighted average of LSTM (60%) and Hybrid LSTM (40%). The best-performing model in this study. |

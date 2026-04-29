@@ -139,8 +139,8 @@ function runPhase1 (islands, suffix = '') {
     console.log(`done  [${summary.pct_land_inundated}% land  |  ${summary.pop_at_risk.toLocaleString()} people]`);
   }
 
-  saveJSON('all_scenarios.json', allResults);
-  saveJSON('phase1_summary.json', summaryAll);
+  saveJSON(`all_scenarios${suffix}.json`, allResults);
+  saveJSON(`phase1_summary${suffix}.json`, summaryAll);
 
   console.log('  [OK] Phase 1 complete');
   return { results: allResults, summary: summaryAll };
