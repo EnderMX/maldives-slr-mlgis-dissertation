@@ -1,26 +1,24 @@
-fix: results mismatch after fetch, identical scenario note in output
+docs+fix: README full metrics table, dashboard hardcoded values corrected
 
-data/islands.json -- correct elevation values locked in
-- islands.json now ships with the scientifically-motivated elevation
-  overrides that reproduce the dissertation results:
-    Male (Kaafu):    flt1=0.516  mean=1.73m  -> 51.6% flood at +1.0m
-    Maafushi:        flt1=0.950  mean=0.60m  -> 95.0% flood at +1.0m
-    Hulhumale:       flt1=0.200  mean=2.00m  -> 20.0% flood at +1.0m
-    Hithadhoo (Snu): flt1=0.720  mean=0.80m  -> 72.0% flood at +1.0m
-    Fuvahmulah:      flt1=0.550  mean=1.20m  -> 55.0% flood at +1.0m
-- The fetch script preserves these values on re-run. Previous runs were
-  restoring the old Python hash() values because the repo shipped with
-  stale elevation data. This commit ships the correct values so the
-  preservation code works as intended from the first run.
+README.md -- complete results section
+- ML table now includes all 6 metrics: RMSE, MAE, R2/NSE, MAPE, Skill, F1
+- Added full GIS table with all 5 IPCC AR6 scenarios, area and population
+- Added Vulnerability Rankings top 5 with VI scores
+- Added explanatory note: SSP1-2.6_2100 and SSP5-8.5_2050 are identical
+  by design (both +0.5m SLR)
+- Fixed population figures: 294,718 (was 291,604), 465,223 (was 462,373)
+- Added total land area (673.76 km2) and population (491,675)
 
-scripts/run_all.js
-- Added note to Results Summary output explaining that SSP1-2.6_2100
-  and SSP5-8.5_2050 show identical values by design (both project
-  +0.5m SLR at their respective dates -- not a bug).
+public/js/dashboard.js -- hardcoded metrics corrected
+- ALL_METRICS extended block had old placeholder values:
+    Ensemble: SkillScore=0.47, F1=0.76  (were hardcoded, never computed)
+  Updated to real computed values from test_forecasts.json:
+    Ensemble: SkillScore=0.0694, F1=0.5882
+    Hybrid LSTM: SkillScore=0.0684, F1=0.6842 (best F1)
+    LSTM: SkillScore=0.0249, F1=0.5161
+  Threshold note updated: +8cm -> +4.5cm detrended anomaly
 
-outputs/ -- pre-computed to match dissertation exactly
-  SSP1-2.6_2050:       21.17% land  |   88,410 people (17.9%)
-  SSP1-2.6_2100:       35.28% land  |  147,368 people (29.8%)
-  SSP5-8.5_2050:       35.28% land  |  147,368 people (29.8%) <- same as above, correct
-  SSP5-8.5_2100:       70.56% land  |  294,718 people (59.6%)
-  SSP5-8.5_2100_surge: 89.91% land  |  465,223 people (94.0%)
+public/index.html -- stale values corrected
+- Skill Score glossary: 0.47 -> 0.07
+- F1 example: 0.76 -> 0.59
+- Threshold description: +8cm -> +4.5cm detrended anomaly

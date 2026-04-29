@@ -21,24 +21,50 @@ The three components are:
 
 ## Results
 
-**Best ML model: Ensemble (LSTM + Hybrid LSTM)**
+### Machine Learning Performance
 
-| Model | RMSE (cm) | R2 |
-|---|---|---|
-| Ensemble (best) | 4.37 | 0.535 |
-| Hybrid LSTM | 4.38 | 0.534 |
-| LSTM | 4.58 | 0.490 |
-| Random Forest | 5.61 | 0.235 |
-| Gradient Boosting | 5.98 | 0.130 |
-| XGBoost | 5.99 | 0.128 |
-| ARIMA | 11.90 | -2.44 |
-| Prophet | 10.18 | -1.52 |
+All models evaluated on a strictly held-out 85-month test set (November 2018 to February 2026). F1 and Skill computed at a +4.5 cm detrended anomaly threshold (21 of 85 months exceeded, 24.7%).
 
-**Flood exposure under worst case (SSP5-8.5 2100):**
+| Model | RMSE (cm) | MAE (cm) | R2 / NSE | MAPE (%) | Skill | F1 |
+|---|---|---|---|---|---|---|
+| **Ensemble (best)** | **4.37** | **3.45** | **0.535** | 70.2 | 0.07 | 0.59 |
+| Hybrid LSTM | 4.38 | 3.39 | 0.534 | 69.1 | 0.07 | 0.68 |
+| LSTM | 4.58 | 3.69 | 0.490 | 75.0 | 0.02 | 0.52 |
+| Random Forest | 5.61 | 4.33 | 0.235 | N/A | N/A | N/A |
+| Gradient Boosting | 5.98 | 4.54 | 0.130 | N/A | N/A | N/A |
+| XGBoost | 5.99 | 4.97 | 0.128 | N/A | N/A | N/A |
+| Prophet | 10.18 | 8.37 | -1.52 | 170.3 | -1.17 | 0.00 |
+| ARIMA(1,1,0) | 11.90 | 10.16 | -2.44 | 206.7 | -1.53 | 0.00 |
 
-- 70.6% of national land area flooded
-- 291,604 people at risk
-- With storm surge: 89.9% of land, 462,373 people
+The Ensemble achieves 63% lower RMSE than ARIMA and falls within the 3-6 cm range of the Bangladesh FFWC operational LSTM system, the closest published equivalent.
+
+### GIS Flood Inundation Results
+
+Bathtub model applied to all 181 inhabited islands under 5 IPCC AR6 scenarios. Total land area: 673.76 km2. Total population: 491,675 (Census 2022).
+
+| Scenario | SLR (m) | Land Flooded | Area (km2) | People at Risk | % Population |
+|---|---|---|---|---|---|
+| SSP1-2.6 2050 | +0.30 | 21.17% | 142.62 | 88,410 | 17.9% |
+| SSP1-2.6 2100 | +0.50 | 35.28% | 237.70 | 147,368 | 29.8% |
+| SSP5-8.5 2050 | +0.50 | 35.28% | 237.70 | 147,368 | 29.8% |
+| **SSP5-8.5 2100** | **+1.00** | **70.56%** | **475.39** | **294,718** | **59.6%** |
+| SSP5-8.5 2100 + Surge | +1.50 | 89.91% | 605.77 | 465,223 | 94.0% |
+
+Note: SSP1-2.6 2100 and SSP5-8.5 2050 produce identical results because both project +0.5 m SLR at their respective dates.
+
+### Vulnerability Rankings (SSP5-8.5 2100)
+
+Vulnerability Index: VI = 0.5 x (land flooded) + 0.3 x (normalised population) + 0.2 x (1 / island area). All sub-indicators normalised to [0, 1].
+
+| Rank | Island | Atoll | VI | % Flooded | Population |
+|---|---|---|---|---|---|
+| 1 | Maafushi | Kaafu | 0.644 | 95.0% | 3,800 |
+| 2 | Fonadhoo | Laamu | 0.592 | 81.5% | 8,500 |
+| 3 | Omadhoo | Thaa | 0.592 | 82.9% | 60 |
+| 4 | Mulah | Meemu | 0.583 | 78.7% | 228 |
+| 5 | Gnaviyani Island 09 | Gnaviyani | 0.583 | 100.0% | 184 |
+
+Male' (Kaafu) ranks 181st by VI due to its large area but has the highest absolute exposure: 137,532 people at risk under SSP5-8.5 2100.
 
 ---
 
