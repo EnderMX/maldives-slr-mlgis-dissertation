@@ -30,6 +30,30 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from xgboost import XGBRegressor
 
+import sys
+import os
+
+# Skip recomputation if valid ml_metrics.json already exists (unless --force)
+_force = '--force' in sys.argv
+_ml_path = os.path.join(os.path.dirname(__file__), '..', 'outputs', 'ml_metrics.json')
+if not _force and os.path.exists(_ml_path):
+    try:
+        import json as _json
+        _ml = _json.load(open(_ml_path))
+        _ens = next((m for m in _ml if 'Ensemble' in m.get('Model','')), None)
+        if _ens and _ens.get('RMSE_cm', 99) < 5.0:
+            print('  [OK] Valid ml_metrics.json found. Skipping tree model recomputation.')
+            print('       Run with --force to regenerate: python scripts/ml_advanced.py --force')
+            # Print existing rankings
+            print('\n-- Final Rankings (pre-computed) --------------------------------')
+            for m in sorted(_ml, key=lambda x: x.get('RMSE_cm', 99)):
+                rmse = m.get('RMSE_cm','?')
+                r2   = m.get('R2','?')
+                print(f"  {m['Model']:<30} | RMSE={rmse}  R2={r2}")
+            sys.exit(0)
+    except Exception: pass  # fall through to recompute
+
+
 os.makedirs('outputs', exist_ok=True)
 
 

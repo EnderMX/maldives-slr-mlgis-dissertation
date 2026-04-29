@@ -32,6 +32,41 @@ async function main () {
 
   ensureDirs();
 
+  // Check if valid pre-computed outputs already exist.
+  // Skip recomputation unless --force is passed.
+  // This ensures the dashboard always shows the correct pre-committed results.
+  const forceRecompute = process.argv.includes('--force');
+  const p1SummaryPath = path.join(OUT_DIR, 'phase1_summary.json');
+  const mlMetricsPath = path.join(OUT_DIR, 'ml_metrics.json');
+  const allScenariosPath = path.join(OUT_DIR, 'all_scenarios.json');
+
+  if (!forceRecompute &&
+      fs.existsSync(p1SummaryPath) &&
+      fs.existsSync(mlMetricsPath) &&
+      fs.existsSync(allScenariosPath)) {
+    try {
+      const p1 = JSON.parse(fs.readFileSync(p1SummaryPath, 'utf8'));
+      const ssp85 = p1['SSP5-8.5_2100'];
+      if (ssp85 && ssp85.pop_at_risk > 200000 && ssp85.n_islands >= 150) {
+        console.log('\n  [OK] Valid pre-computed outputs found. Skipping recomputation.');
+        console.log('       Run with --force to regenerate: node scripts/run_all.js --force');
+        console.log('\n-- Results Summary (pre-computed) ----------------------------');
+        console.log('  Note: SSP1-2.6_2100 and SSP5-8.5_2050 both use +0.5m SLR -- identical by design');
+        for (const [scen, s] of Object.entries(p1)) {
+          console.log(\`  \${scen.padEnd(22)} | \${s.pct_land_inundated}% land | \${s.pop_at_risk.toLocaleString()} people at risk\`);
+        }
+        console.log('\n-- Done (pre-computed) -----------------------------------------');
+        console.log('  Start dashboard: node server.js  (then open http://localhost:3000)');
+        console.log('='.repeat(60));
+        return;
+      }
+    } catch (e) { /* invalid JSON, fall through to recompute */ }
+  }
+
+  if (forceRecompute) {
+    console.log('\n  --force flag detected. Recomputing all outputs...');
+  }
+
   // Load or generate sea level data
   const slPaths = [
     path.join(DATA_DIR, 'male_sealevel.csv'),

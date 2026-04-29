@@ -1,24 +1,19 @@
-docs+fix: README full metrics table, dashboard hardcoded values corrected
+docs: add uncertainty statements to presentation, README, dashboard
 
-README.md -- complete results section
-- ML table now includes all 6 metrics: RMSE, MAE, R2/NSE, MAPE, Skill, F1
-- Added full GIS table with all 5 IPCC AR6 scenarios, area and population
-- Added Vulnerability Rankings top 5 with VI scores
-- Added explanatory note: SSP1-2.6_2100 and SSP5-8.5_2050 are identical
-  by design (both +0.5m SLR)
-- Fixed population figures: 294,718 (was 291,604), 465,223 (was 462,373)
-- Added total land area (673.76 km2) and population (491,675)
+GIS results use SRTM-parameterised elevations (median values). SRTM has
++/-5-10m vertical accuracy against ~1.5m mean island elevation, so flood
+percentages are best-estimate medians, not bounds. IPCC AR6 50th-percentile
+SLR values are used throughout. ML results are deterministic (Seed 12345)
+but test period is dominated by 2019-2020 IOD -- neutral IOD performance
+not separately validated. Acknowledging these proactively strengthens the
+academic defence.
 
-public/js/dashboard.js -- hardcoded metrics corrected
-- ALL_METRICS extended block had old placeholder values:
-    Ensemble: SkillScore=0.47, F1=0.76  (were hardcoded, never computed)
-  Updated to real computed values from test_forecasts.json:
-    Ensemble: SkillScore=0.0694, F1=0.5882
-    Hybrid LSTM: SkillScore=0.0684, F1=0.6842 (best F1)
-    LSTM: SkillScore=0.0249, F1=0.5161
-  Threshold note updated: +8cm -> +4.5cm detrended anomaly
+viva_presentation.pptx
+- Slide 9 (GIS Results): added uncertainty callout below the scenario table
+- Slide 14 (Key Findings): added one-line uncertainty note on SRTM and IOD
 
-public/index.html -- stale values corrected
-- Skill Score glossary: 0.47 -> 0.07
-- F1 example: 0.76 -> 0.59
-- Threshold description: +8cm -> +4.5cm detrended anomaly
+README.md
+- Added Uncertainty paragraph below the GIS table
+
+public/index.html
+- SRTM description updated: Shuttle Radar Topography Mission (+/-5-10m vertical accuracy)

@@ -52,6 +52,8 @@ Bathtub model applied to all 181 inhabited islands under 5 IPCC AR6 scenarios. T
 
 Note: SSP1-2.6 2100 and SSP5-8.5 2050 produce identical results because both project +0.5 m SLR at their respective dates.
 
+**Uncertainty:** All GIS results use SRTM-parameterised elevations (median values). SRTM has +/-5--10m vertical accuracy at 90% confidence against a mean island elevation of ~1.5m, meaning actual flood percentages could be meaningfully higher or lower. Results represent IPCC AR6 50th-percentile (median) SLR projections. ML results are deterministic (Seed 12345); the test period is dominated by the 2019--2020 IOD event -- model performance under neutral IOD conditions has not been separately validated.
+
 ### Vulnerability Rankings (SSP5-8.5 2100)
 
 Vulnerability Index: VI = 0.5 x (land flooded) + 0.3 x (normalised population) + 0.2 x (1 / island area). All sub-indicators normalised to [0, 1].
