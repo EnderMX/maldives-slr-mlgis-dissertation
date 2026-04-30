@@ -53,7 +53,7 @@ async function main () {
         console.log('\n-- Results Summary (pre-computed) ----------------------------');
         console.log('  Note: SSP1-2.6_2100 and SSP5-8.5_2050 both use +0.5m SLR -- identical by design');
         for (const [scen, s] of Object.entries(p1)) {
-          console.log(\`  \${scen.padEnd(22)} | \${s.pct_land_inundated}% land | \${s.pop_at_risk.toLocaleString()} people at risk\`);
+          console.log(`  ${scen.padEnd(22)} | ${s.pct_land_inundated}% land | ${s.pop_at_risk.toLocaleString()} people at risk`);
         }
         console.log('\n-- Done (pre-computed) -----------------------------------------');
         console.log('  Start dashboard: node server.js  (then open http://localhost:3000)');

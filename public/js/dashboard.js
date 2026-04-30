@@ -231,12 +231,12 @@ function renderOverview() {
     <div class="kpi-card ${getClass(s.pct_land_inundated)}">
       <div class="kpi-label">Land Area at Risk</div>
       <div class="kpi-value flood-rise">${s.pct_land_inundated}%</div>
-      <div class="kpi-sub">${s.inundated_area_km2} km^2 of ${s.total_area_km2} km^2</div>
+      <div class="kpi-sub">${s.inundated_area_km2} km^2 of ${(s.inundated_area_km2 / s.pct_land_inundated * 100).toFixed(2)} km^2</div>
     </div>
     <div class="kpi-card ${getClass(s.pct_pop_at_risk)}">
       <div class="kpi-label">Population at Risk</div>
       <div class="kpi-value flood-rise">${s.pop_at_risk.toLocaleString()}</div>
-      <div class="kpi-sub">${s.pct_pop_at_risk}% of ${s.total_population.toLocaleString()}</div>
+      <div class="kpi-sub">${s.pct_pop_at_risk}% of ${Math.round(s.pop_at_risk / s.pct_pop_at_risk * 100).toLocaleString()}</div>
     </div>
     <div class="kpi-card ${s.n_islands_gt50pct > 100 ? 'danger' : s.n_islands_gt50pct > 20 ? 'warning' : 'ok'}">
       <div class="kpi-label">Islands &gt;50% Flooded</div>
