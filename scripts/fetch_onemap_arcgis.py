@@ -77,6 +77,7 @@ def get_all_features():
             'outFields':    '*',
             'outSR':        '4326',
             'geometryType': 'esriGeometryPolygon',
+            'returnCentroid': 'true',
             'f':            'geojson',
         })
         if data and 'features' in data:
@@ -467,7 +468,13 @@ def main():
             default='Unknown')).strip()
 
         # Geometry
-        lat, lon = polygon_centroid(coords)
+        # Use ArcGIS returnCentroid (guaranteed interior point) if available
+        esri_centroid = feat.get('centroid')
+        if esri_centroid and esri_centroid.get('x') is not None:
+            lat = round(esri_centroid['y'], 6)
+            lon = round(esri_centroid['x'], 6)
+        else:
+            lat, lon = polygon_centroid(coords)
         area     = polygon_area_km2(coords)
 
         # Use Area_ha from attribute if available (more accurate than shoelace)
