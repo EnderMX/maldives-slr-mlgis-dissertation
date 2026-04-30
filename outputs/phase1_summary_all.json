@@ -1,0 +1,217 @@
+{
+  "SSP1-2.6_2050": {
+    "n_islands": 1132,
+    "total_area_km2": 247.29,
+    "inundated_area_km2": 50.62,
+    "pct_land_inundated": 20.47,
+    "total_population": 515285,
+    "pop_at_risk": 103207,
+    "pct_pop_at_risk": 20.03,
+    "n_islands_gt50pct": 0,
+    "n_islands_gt80pct": 0,
+    "top5_vulnerable": [
+      {
+        "name": "Orimasvaru",
+        "atoll": "Noonu",
+        "vi": 0.9981,
+        "pct": 24.96
+      },
+      {
+        "name": "Muravandhoo",
+        "atoll": "Raa",
+        "vi": 0.9964,
+        "pct": 24.96
+      },
+      {
+        "name": "Vinaneiyfaruhuraa",
+        "atoll": "Baa",
+        "vi": 0.9927,
+        "pct": 24.87
+      },
+      {
+        "name": "Madivarufinolhu",
+        "atoll": "Alifu Alifu",
+        "vi": 0.9925,
+        "pct": 24.87
+      },
+      {
+        "name": "Kalhumanjehuraa",
+        "atoll": "Lhaviyani",
+        "vi": 0.9925,
+        "pct": 24.87
+      }
+    ]
+  },
+  "SSP1-2.6_2100": {
+    "n_islands": 1132,
+    "total_area_km2": 247.29,
+    "inundated_area_km2": 84.37,
+    "pct_land_inundated": 34.12,
+    "total_population": 515285,
+    "pop_at_risk": 172013,
+    "pct_pop_at_risk": 33.38,
+    "n_islands_gt50pct": 0,
+    "n_islands_gt80pct": 0,
+    "top5_vulnerable": [
+      {
+        "name": "Orimasvaru",
+        "atoll": "Noonu",
+        "vi": 0.9981,
+        "pct": 41.6
+      },
+      {
+        "name": "Muravandhoo",
+        "atoll": "Raa",
+        "vi": 0.9964,
+        "pct": 41.6
+      },
+      {
+        "name": "Vinaneiyfaruhuraa",
+        "atoll": "Baa",
+        "vi": 0.9927,
+        "pct": 41.45
+      },
+      {
+        "name": "Madivarufinolhu",
+        "atoll": "Alifu Alifu",
+        "vi": 0.9925,
+        "pct": 41.45
+      },
+      {
+        "name": "Kalhumanjehuraa",
+        "atoll": "Lhaviyani",
+        "vi": 0.9925,
+        "pct": 41.45
+      }
+    ]
+  },
+  "SSP5-8.5_2050": {
+    "n_islands": 1132,
+    "total_area_km2": 247.29,
+    "inundated_area_km2": 84.37,
+    "pct_land_inundated": 34.12,
+    "total_population": 515285,
+    "pop_at_risk": 172013,
+    "pct_pop_at_risk": 33.38,
+    "n_islands_gt50pct": 0,
+    "n_islands_gt80pct": 0,
+    "top5_vulnerable": [
+      {
+        "name": "Orimasvaru",
+        "atoll": "Noonu",
+        "vi": 0.9981,
+        "pct": 41.6
+      },
+      {
+        "name": "Muravandhoo",
+        "atoll": "Raa",
+        "vi": 0.9964,
+        "pct": 41.6
+      },
+      {
+        "name": "Vinaneiyfaruhuraa",
+        "atoll": "Baa",
+        "vi": 0.9927,
+        "pct": 41.45
+      },
+      {
+        "name": "Madivarufinolhu",
+        "atoll": "Alifu Alifu",
+        "vi": 0.9925,
+        "pct": 41.45
+      },
+      {
+        "name": "Kalhumanjehuraa",
+        "atoll": "Lhaviyani",
+        "vi": 0.9925,
+        "pct": 41.45
+      }
+    ]
+  },
+  "SSP5-8.5_2100": {
+    "n_islands": 1132,
+    "total_area_km2": 247.29,
+    "inundated_area_km2": 168.76,
+    "pct_land_inundated": 68.25,
+    "total_population": 515285,
+    "pop_at_risk": 344034,
+    "pct_pop_at_risk": 66.77,
+    "n_islands_gt50pct": 1122,
+    "n_islands_gt80pct": 131,
+    "top5_vulnerable": [
+      {
+        "name": "Orimasvaru",
+        "atoll": "Noonu",
+        "vi": 0.9981,
+        "pct": 100
+      },
+      {
+        "name": "Muravandhoo",
+        "atoll": "Raa",
+        "vi": 0.9964,
+        "pct": 100
+      },
+      {
+        "name": "Vinaneiyfaruhuraa",
+        "atoll": "Baa",
+        "vi": 0.7264,
+        "pct": 82.9
+      },
+      {
+        "name": "Kalhumanjehuraa",
+        "atoll": "Lhaviyani",
+        "vi": 0.7262,
+        "pct": 82.9
+      },
+      {
+        "name": "Madivarufinolhu",
+        "atoll": "Alifu Alifu",
+        "vi": 0.7261,
+        "pct": 82.9
+      }
+    ]
+  },
+  "SSP5-8.5_2100_surge": {
+    "n_islands": 1132,
+    "total_area_km2": 247.29,
+    "inundated_area_km2": 218.74,
+    "pct_land_inundated": 88.46,
+    "total_population": 515285,
+    "pop_at_risk": 450916,
+    "pct_pop_at_risk": 87.51,
+    "n_islands_gt50pct": 1132,
+    "n_islands_gt80pct": 799,
+    "top5_vulnerable": [
+      {
+        "name": "Vilin'gilivarufinolhu",
+        "atoll": "Faafu",
+        "vi": 1,
+        "pct": 100
+      },
+      {
+        "name": "Dhapparuhuraa",
+        "atoll": "Haa Alifu",
+        "vi": 1,
+        "pct": 100
+      },
+      {
+        "name": "Govvaafushi",
+        "atoll": "Lhaviyani",
+        "vi": 1,
+        "pct": 100
+      },
+      {
+        "name": "Olhufushifinolhu",
+        "atoll": "Thaa",
+        "vi": 1,
+        "pct": 100
+      },
+      {
+        "name": "Keyhuvadhoo",
+        "atoll": "Gaafu Dhaalu",
+        "vi": 1,
+        "pct": 100
+      }
+    ]
+  }
+}

@@ -74,13 +74,14 @@ async function updateFloodBubbles(scenarioData) {
         if (!island.lon || !island.lat) return;
         
         const [x, y] = wgs84ToWebMercator(island.lon, island.lat);
-        const radius = Math.max(8, Math.min(40, Math.sqrt(island.area_km2) * 10));
+        const zoom = (window.mapView && window.mapView.zoom) ? window.mapView.zoom : 8.5;
+        const zoomScale = Math.max(0.3, Math.min(1.5, (zoom - 6) / 6));
+        const radius = Math.max(3, Math.min(20, Math.sqrt(island.area_km2) * 6 * zoomScale));
         const fillColor = getFloodColor(island.pct_inundated);
         
         const point = new window.PointClass({
-            x: x,
-            y: y,
-            spatialReference: { wkid: 3857 }
+            longitude: island.lon,
+            latitude: island.lat
         });
         
         // Determine risk level text
@@ -224,7 +225,7 @@ function createOneMapWithFloodBubbles(container) {
         });
 
         // Create the map view
-        const view = new MapView({
+        const view = window.mapView = new MapView({
             container: "arcgis-map",
             map: map,
             center: [73.5089, 4.1753],
@@ -251,6 +252,7 @@ function createOneMapWithFloodBubbles(container) {
         
         // 1. Reef Layer
         const reefLayer = new FeatureLayer({
+            popupEnabled: false,
             url: "https://services7.arcgis.com/yvCbn3q8PPtPLZIM/arcgis/rest/services/reef/FeatureServer/0",
             title: "Reefs",
             opacity: 0.35,
@@ -274,6 +276,7 @@ function createOneMapWithFloodBubbles(container) {
 
         // 2. Lagoon Layer
         const lagoonLayer = new FeatureLayer({
+            popupEnabled: false,
             url: "https://services7.arcgis.com/yvCbn3q8PPtPLZIM/arcgis/rest/services/lagoon/FeatureServer/0",
             title: "Lagoons",
             opacity: 0.25,
@@ -301,10 +304,7 @@ function createOneMapWithFloodBubbles(container) {
             title: "Islands",
             opacity: 0.95,
             outFields: ["*"],
-            popupTemplate: {
-                title: "{islandName}",
-                content: createExactIslandPopup
-            },
+            popupEnabled: false,
             renderer: {
                 type: "simple",
                 symbol: {
@@ -625,7 +625,12 @@ function createOneMapWithFloodBubbles(container) {
             view.watch("stationary", (stationary) => {
                 if (stationary) {
                     if (_labelDebounce) clearTimeout(_labelDebounce);
-                    _labelDebounce = setTimeout(() => addSmartIslandLabels(), 500);
+                    _labelDebounce = setTimeout(() => {
+                        addSmartIslandLabels();
+                        if (window.state && window.state.allScenarios) {
+                            updateFloodBubbles(window.state.allScenarios[window.state.scenario]);
+                        }
+                    }, 500);
                 }
             });
             

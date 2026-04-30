@@ -94,9 +94,22 @@ def polygon_centroid(coords):
     ring = coords[0] if coords and isinstance(coords[0][0], (list, tuple)) else coords
     if not ring:
         return 0.0, 0.0
-    lon = sum(c[0] for c in ring) / len(ring)
-    lat = sum(c[1] for c in ring) / len(ring)
-    return round(lat, 6), round(lon, 6)
+    # Shoelace weighted centroid - handles concave/irregular shapes
+    A, cx, cy = 0.0, 0.0, 0.0
+    n = len(ring)
+    for i in range(n):
+        x0, y0 = ring[i][0], ring[i][1]
+        x1, y1 = ring[(i + 1) % n][0], ring[(i + 1) % n][1]
+        cross = x0 * y1 - x1 * y0
+        A  += cross
+        cx += (x0 + x1) * cross
+        cy += (y0 + y1) * cross
+    A *= 0.5
+    if abs(A) < 1e-10:  # degenerate, fall back to mean
+        return round(sum(c[1] for c in ring) / len(ring), 6), round(sum(c[0] for c in ring) / len(ring), 6)
+    cx /= (6 * A)
+    cy /= (6 * A)
+    return round(cy, 6), round(cx, 6)
 
 def polygon_area_km2(coords):
     ring = coords[0] if coords and isinstance(coords[0][0], (list, tuple)) else coords
